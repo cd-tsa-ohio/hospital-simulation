@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using SimioAPI;
+using SimioAPI.Extensions;
+
+namespace Bed
+{
+    class MandviUserAddIn : IDesignAddIn
+    {
+        #region IDesignAddIn Members
+
+        /// <summary>
+        /// Property returning the name of the add-in. This name may contain any characters and is used as the display name for the add-in in the UI.
+        /// </summary>
+        public string Name
+        {
+            get { return "Bed,Source,Admission"; }
+        }
+
+        /// <summary>
+        /// Property returning a short description of what the add-in does.
+        /// </summary>
+        public string Description
+        {
+            get { return "This is modified in would create an inpatient unit that contains one bed and an admission"; }
+        }
+
+        /// <summary>
+        /// Property returning an icon to display for the add-in in the UI.
+        /// </summary>
+        public System.Drawing.Image Icon
+        {
+            get { return null; }
+        }
+
+        /// <summary>
+        /// Method called when the add-in is run.
+        /// </summary>
+        public void Execute(SimioAPI.Extensions.IDesignContext context)
+        {
+            // This example code places some new objects from the Standard Library into the active model of the project.
+            if (context.ActiveModel != null)
+            {
+                // Example of how to place some new fixed objects into the active model.
+                // This example code places three new fixed objects: a Source, a Server, and a Sink.
+                IIntelligentObjects intelligentObjects = context.ActiveModel.Facility.IntelligentObjects;
+                IFixedObject bed = intelligentObjects.CreateObject("Bed", new FacilityLocation(0, 0, 0)) as IFixedObject;
+                IFixedObject sourceObject = intelligentObjects.CreateObject("Source", new FacilityLocation(-10, 0, -10)) as IFixedObject;
+                IFixedObject serverObject = intelligentObjects.CreateObject("Server", new FacilityLocation(0, 0, 0)) as IFixedObject;
+                IFixedObject sinkObject = intelligentObjects.CreateObject("Sink", new FacilityLocation(10, 0, 10)) as IFixedObject;
+               IEntityInstanceReferencePropertyDefinition i = intelligentObjects.CreateObject("Patient", new FacilityLocation(-20,0,-10)) as IEntityInstanceReferencePropertyDefinition;
+              
+                // Example of how to place some new link objects into the active model (to add network paths between nodes).
+                // This example code places two new link objects: a Path connecting the Source 'output' node to the Server 'input' node,
+                // and a Path connecting the Server 'output' node to the Sink 'input' node.
+                INodeObject sourceOutputNode = sourceObject.Nodes[0];
+                INodeObject serverInputNode = serverObject.Nodes[0];
+                INodeObject serverOutputNode = serverObject.Nodes[1];
+                INodeObject sinkInputNode = sinkObject.Nodes[0];
+                INodeObject bedinputnode = bed.Nodes[0];
+                INodeObject bedoutputnode = bed.Nodes[1];
+                ILinkObject pathObject1 = intelligentObjects.CreateLink("Path", sourceOutputNode, serverInputNode, null) as ILinkObject;
+                ILinkObject pathObject2 = intelligentObjects.CreateLink("Path", serverOutputNode, bedinputnode, null) as ILinkObject;
+                ILinkObject pathObject3 = intelligentObjects.CreateLink("Path", bedoutputnode, sinkInputNode, null) as ILinkObject;
+               
+                // Example of how to edit the property of an object.
+                // This example code edits the 'ProcessingTime' property of the added Server object.
+                serverObject.Properties["ProcessingTime"].Value = "0";
+                
+            }
+        }
+
+        #endregion
+    }
+}
