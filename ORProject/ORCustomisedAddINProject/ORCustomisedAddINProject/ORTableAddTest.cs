@@ -17,7 +17,7 @@ namespace ORCustomisedAddINProject
     class ORTableAddTest : IDesignAddIn, IDesignAddInGuiDetails, IGridDataRecords
     {
          #region IDesignAddIn Members
-
+ 
 
 
         /// <summary> 
@@ -67,8 +67,8 @@ namespace ORCustomisedAddINProject
                 string filename = @"C:\Users\Simiotest\Resources.csv";
                 // Displays an OpenFileDialog so the user can select a Cursor.  
                 OpenFileDialog openFileDialog1 = new OpenFileDialog();
-                openFileDialog1.Filter = "Cursor Files|*.cur";
-                openFileDialog1.Title = "Select a Cursor File";
+                openFileDialog1.Filter = "CSV Files|*.csv";
+                openFileDialog1.Title = "Select a CSV File";
 
                 // Show the Dialog.  
                 // If the user clicked OK in the dialog and  
@@ -108,7 +108,7 @@ namespace ORCustomisedAddINProject
                     ObjectName.CategoryName = "OUPrpperties";
                     var ZLocation = context.ActiveModel.PropertyDefinitions.AddStringProperty("ZLocation", "null");
                     ObjectName.CategoryName = "OUPrpperties";
-
+                    
                     if (context.ActiveModel.Properties["TableName"].Value == "null")
                     {                                                                                                         
                             while (true)
@@ -186,11 +186,12 @@ namespace ORCustomisedAddINProject
                                     columnns = t.Columns.AddCostCenterReferenceColumn(columnName);
                                     columnData.Add(columnName);
                                 }
-                                //else if (propertyType == "AddDateTimeColum")
-                                //{
-                                //    columnns = t.Columns.AddDateTimeColumn(columnName,( 2008, 5, 1, 8, 30, 52));
-                                //    columnData.Add(columnName);
-                                //}
+                                else if (propertyType == "AddDateTimeColum")
+                                {
+                                    DateTime date1 = new DateTime(2008, 5, 1, 8, 30, 52);
+                                    columnns = t.Columns.AddDateTimeColumn(columnName, (date1));
+                                    columnData.Add(columnName);
+                                }
                                 else if (propertyType == "AddDayPatternReferenceColumn")
                                 {
                                     columnns = t.Columns.AddDayPatternReferenceColumn(columnName);

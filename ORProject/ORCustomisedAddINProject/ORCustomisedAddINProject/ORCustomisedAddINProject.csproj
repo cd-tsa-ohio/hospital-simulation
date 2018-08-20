@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddingList.cs" />
+    <Compile Include="AddingPropertiesValues.cs" />
     <Compile Include="ConfigureFlexibleAddIn.cs" />
     <Compile Include="CsvFileReader.cs" />
     <Compile Include="Form1.cs">
