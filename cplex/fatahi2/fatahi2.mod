@@ -10,8 +10,8 @@ int t =...;
 range T= 1..t;
 range T2= 2..t;
 //number of resources
-//int r =...;
-//range R=1..r;
+int r =...;
+range R=1..r;
 // region
 int i = ...;
 range I = 1..i;

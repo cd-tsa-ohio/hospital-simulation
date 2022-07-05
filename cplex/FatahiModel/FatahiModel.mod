@@ -25,6 +25,7 @@ int C[I][T]=...;
  dvar boolean NA [K][I];
  dexpr int p [I][TR][T]= sum (tr in TR)sum (i in I)sum(t in T);
 
+
  
  
  
