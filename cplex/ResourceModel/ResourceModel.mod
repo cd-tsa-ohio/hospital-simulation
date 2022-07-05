@@ -65,7 +65,7 @@ dexpr float total = sum (t in T)sum (i in I)NW[t][i];
  }
  } 
 }
- forall ( t in T2){
+ forall (t in T){
  forall (i in I) {
  forall (r in R){
  x[t][i]<=kb [t][i][r]; 
