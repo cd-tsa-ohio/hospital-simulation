@@ -211,5 +211,7 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 
-# CPLEX files
-cplex/.metadata
+# CPLEX files dnsormaz 7/5/2022
+cplex/.metadata/
+cplex/.metadata/*/*.js
+cplex/.metadata/*/*.xml
