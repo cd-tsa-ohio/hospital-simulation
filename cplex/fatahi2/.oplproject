@@ -7,6 +7,12 @@
 			<ref name="fatahi2.dat" type="data">
 			</ref>
 		</config>
+		<config default="false" name="dns-config" category="opl">
+			<ref name="fatahi2.mod" type="model">
+			</ref>
+			<ref name="fatahi2-dns.dat" type="data">
+			</ref>
+		</config>
 	</configs>
 	
 </project>
