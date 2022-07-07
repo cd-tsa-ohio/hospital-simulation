@@ -1,7 +1,7 @@
 /*********************************************
  * OPL 12.8.0.0 Model
  * Author: HP
- * Creation Date: Jul 2, 2022 at 5:28:31 PM
+ * Creation Date: Jul 6, 2022 at 4:46:00 PM
  *********************************************/
 //model sets
 //number of days
@@ -36,6 +36,7 @@ int X[T][I]=...;
 dvar int+ n[T][I][R];
 //amount of new capacity added
 //dvar int+ c [I][R][T];
+dvar int+ alpha;
 
 //number of healthcare resources that are transhipped
 dvar int+ q[T][I][I2];
@@ -54,6 +55,8 @@ dvar int+ p[T][I][I2];
 dexpr float total = sum (t in T)sum (i in I)NW[t][i];
  minimize total;
  subject to{
+ alpha<=1; 
+ 
  forall (t in T){ 
  
   forall ( i in I){
@@ -117,8 +120,8 @@ n[t][i][r]==0;
  
  
 //x[i][k][t]+w[i][t]-sum (i in I)p [i][i2][k][t]==D[i][k][t]+sum (i in I)p [i2][i][k][t]+NW[i][t]; 
-//x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][i][j]==D[t][i]+sum(j in I: j!=i)p [t][j][i]+NW[t-1][i]; 
-x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][j][i]==D[t][i]+sum(j in I: j!=i)p [t][i][j];
+x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][i][j]==D[t][i]+sum(j in I: j!=i)p [t][j][i]+NW[t-1][i]; 
+
  //}
  
 
@@ -140,7 +143,7 @@ NW[t][i]>=w[t][i]-sum(j in I: j!=i)p [t][i][j];
  //forall (r in R) {
  forall (i in I){
 //w[i][t]<=max{D[i][k][t]}*0.5;
-x[t][i]+w[t][i]==D[t][i];
+w[t][i]<=D[t][i] * alpha;
  //}
  
 
@@ -154,7 +157,7 @@ x[t][i]+w[t][i]==D[t][i];
 //sum (i in I)p [t][i]<=D[t][i]*0.25;
 {
 
-sum (j in I: j!=i)p [t][j][i]<=D[t][i];
+sum (j in I: j!=i)p [t][j][i]<=D[t][i]*(1-alpha);
 
 }
 

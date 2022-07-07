@@ -65,7 +65,7 @@ dexpr float total = sum (t in T)sum (i in I)NW[t][i];
  }
  } 
 }
- forall ( t in T){
+ forall ( t in T2){
  forall (i in I) {
  forall (r in R){
  x[t][i]<=kb [t][i][r]; 
@@ -117,8 +117,8 @@ n[t][i][r]==0;
  
  
 //x[i][k][t]+w[i][t]-sum (i in I)p [i][i2][k][t]==D[i][k][t]+sum (i in I)p [i2][i][k][t]+NW[i][t]; 
-//x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][i][j]==D[t][i]+sum(j in I: j!=i)p [t][j][i]+NW[t-1][i]; 
-x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][j][i]==D[t][i]+sum(j in I: j!=i)p [t][i][j];
+x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][i][j]==D[t][i]+sum(j in I: j!=i)p [t][j][i]+NW[t-1][i]; 
+
  //}
  
 
@@ -140,7 +140,7 @@ NW[t][i]>=w[t][i]-sum(j in I: j!=i)p [t][i][j];
  //forall (r in R) {
  forall (i in I){
 //w[i][t]<=max{D[i][k][t]}*0.5;
-x[t][i]+w[t][i]==D[t][i];
+w[t][i]<=D[t][i]*1;
  //}
  
 
@@ -154,7 +154,7 @@ x[t][i]+w[t][i]==D[t][i];
 //sum (i in I)p [t][i]<=D[t][i]*0.25;
 {
 
-sum (j in I: j!=i)p [t][j][i]<=D[t][i];
+sum (j in I: j!=i)p [t][j][i]<=D[t][i]*1;
 
 }
 

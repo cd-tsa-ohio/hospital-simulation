@@ -118,7 +118,7 @@ n[t][i][r]==0;
  
 //x[i][k][t]+w[i][t]-sum (i in I)p [i][i2][k][t]==D[i][k][t]+sum (i in I)p [i2][i][k][t]+NW[i][t]; 
 //x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][i][j]==D[t][i]+sum(j in I: j!=i)p [t][j][i]+NW[t-1][i]; 
-x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][j][i]==D[t][i]+sum(j in I: j!=i)p [t][i][j];
+x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][i][j]==D[t][i]+sum(j in I: j!=i)p [t][j][i];
  //}
  
 
