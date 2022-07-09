@@ -7,6 +7,12 @@
 			<ref name="ResourceModel.dat" type="data">
 			</ref>
 		</config>
+		<config default="false" name="dns-config-run-6-days" category="opl">
+			<ref name="ResourceModel.mod" type="model">
+			</ref>
+			<ref name="ResourceModel-dns.dat" type="data">
+			</ref>
+		</config>
 	</configs>
 	
 </project>
