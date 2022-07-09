@@ -52,7 +52,8 @@ dvar int+ p[T][I][I2];
  // objective function
 // dexpr float total = sum (i in I)sum (t in T)NW[i][t]+ sum (i in I)sum (r in R)sum (t in T)n[i][r][t]  +sum (i in I)sum (r in R)sum (t in T)c[i][r][t];
 dexpr float total = sum (t in T)sum (i in I)NW[t][i];
- minimize total;
+dexpr float transfers = sum (t in T)sum (i in I) sum (j in I) p [t][i][j]; // dns added 070822
+ minimize total; 
  subject to{
  forall (t in T){ 
  
@@ -118,30 +119,31 @@ n[t][i][r]==0;
  
 //x[i][k][t]+w[i][t]-sum (i in I)p [i][i2][k][t]==D[i][k][t]+sum (i in I)p [i2][i][k][t]+NW[i][t]; 
 //x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][i][j]==D[t][i]+sum(j in I: j!=i)p [t][j][i]+NW[t-1][i]; 
-x[t][i]+w[t][i]-sum(j in I: j!=i) p [t][j][i]==D[t][i]+sum(j in I: j!=i)p [t][i][j];
+x[t][i]+NW[t][i]-sum(j in I: j!=i) p [t][i][j]<=D[t][i]+sum(j in I: j!=i)p [t][j][i];
  //}
  
 
  }
- x[1][i]+w[1][i]-sum(j in I: j!=i) p [1][i][j]==D[1][i]+sum(j in I: j!=i)p [1][j][i];
+ x[1][i]+NW[1][i]-sum(j in I: j!=i) p [1][i][j]<=D[1][i]+sum(j in I: j!=i)p [1][j][i];
  }
 // 
   forall ( t in T){
  //forall (r in R) {
  forall (i in I){
 //NW[i][t]>=w[i][t]-sum (i in I)p [i][i2][k][t]; 
-NW[t][i]>=w[t][i]-sum(j in I: j!=i)p [t][i][j]; 
+NW[t][i]==w[t][i]-sum(j in I: j!=i)p [t][i][j]; 
  //}
  
 
  }
  }
  forall ( t in T){
- //forall (r in R) {
+ forall (r in R) {
  forall (i in I){
 //w[i][t]<=max{D[i][k][t]}*0.5;
 x[t][i]+w[t][i]==D[t][i];
- //}
+x[t][i] + sum(j in I: j!=i)p [t][j][i] == E[t][i][r];  // dns added 070822
+ }
  
 
  }
