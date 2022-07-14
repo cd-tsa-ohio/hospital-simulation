@@ -142,7 +142,7 @@ NW[t][i]==w[t][i]-sum(j in I: j!=i)p [t][i][j];
  forall (i in I){
 //w[i][t]<=max{D[i][k][t]}*0.5;
 x[t][i]+w[t][i]==D[t][i];
-x[t][i] + sum(j in I: j!=i)p [t][j][i] == E[t][i][r];  // dns added 070822
+//x[t][i] + sum(j in I: j!=i)p [t][j][i] == E[t][i][r];  // dns added 070822
  }
  
 
