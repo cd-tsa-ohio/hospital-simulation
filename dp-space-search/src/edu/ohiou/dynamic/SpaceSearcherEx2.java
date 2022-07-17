@@ -46,7 +46,6 @@ public class SpaceSearcherEx2 extends DefaultSpaceState {
 }
 
 
-
 	@Override
 	public int[] setSearchTypes() {
 		int [] searchTypes = {SpaceSearcher.BREADTH_FIRST};
