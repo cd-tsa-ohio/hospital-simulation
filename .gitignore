@@ -218,4 +218,4 @@ cplex/.metadata/*/*.xml
 
 
 #Eclipse proejct files
-dp-space-search/.metadata/
+.metadata/
