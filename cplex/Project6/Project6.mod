@@ -55,14 +55,16 @@ dvar int+ P[T][I];
 dvar int+ UX[T][I];
  // objective function
 // dexpr float total = sum (i in I)sum (t in T)NW[i][t]+ sum (i in I)sum (r in R)sum (t in T)n[i][r][t]  +sum (i in I)sum (r in R)sum (t in T)c[i][r][t];
-dexpr float total = sum (t in T)sum (i in I)UX[t][i];
- maximize total;
+dexpr float total = sum (t in T)sum (i in I)NW[t][i];
+ minimize total;
  subject to{
  alpha<=1; 
  
  forall (t in T){ 
  
   forall ( i in I){
+  rc[t][i]==sum (j in I : j!= i)p[t][j][i];  
+  
  
  forall (r in R){
  kb[t][i][r]==E [t][i][r]; 
@@ -86,13 +88,11 @@ dexpr float total = sum (t in T)sum (i in I)UX[t][i];
  }
   forall ( t in T){
  forall (i in I) {
- forall (r in R){
+
  UX[t][i]==x [t][i]+ sum ( j in I : j!=i)p[t][j][i]; 
  
  // xi is less than capacity
- }
  
-
  }
  }
   forall ( t in T){
@@ -109,20 +109,20 @@ dexpr float total = sum (t in T)sum (i in I)UX[t][i];
  }
 }
 
-//
-//  forall ( t in T){
-// //forall (r in R) {
-// forall (i in I){
-//
-// 
-////NW[i][t]>=w[i][t]-sum (i in I)p [i][i2][k][t]; 
-////NW[t][i]>=w[t][i]-sum ( j in I : j!=i)p [t][i][j]; 
-//  
-// //}
-// 
-//
-// }
-// }
+
+  forall ( t in T){
+ //forall (r in R) {
+ forall (i in I){
+
+ 
+//NW[i][t]>=w[i][t]-sum (i in I)p [i][i2][k][t]; 
+NW[t][i]>=w[t][i]-sum ( j in I : j!=i)p [t][i][j]; 
+  
+ //}
+ 
+
+ }
+ }
  forall ( t in T){
  //forall (r in R) {
  forall (i in I){
@@ -134,18 +134,18 @@ w[t][i]>=D[t][i]-x [t][i];
  }
 
  
-  forall ( t in  T){
-
- forall (i in I ){
- forall ( j in I :j!=i){ 
- 
-p[t][i][j]== minl(w[t][i],rc[t][j]);
-
-
-}
-
- }
- }
+//  forall ( t in  T){
+//
+// forall (i in I ){
+// forall ( j in I :j!=i){ 
+// 
+//p[t][i][j]== minl(w[t][i],rc[t][j]);
+//
+//
+//}
+//
+// }
+// }
   forall ( t in  T){
 
  forall (i in I ){
