@@ -1,7 +1,7 @@
 /*********************************************
  * OPL 12.8.0.0 Model
  * Author: HP
- * Creation Date: Jul 23, 2022 at 3:35:17 PM
+ * Creation Date: Jul 23, 2022 at 11:31:50 PM
  *********************************************/
 int t =...;
 range T= 1..t;
@@ -27,7 +27,7 @@ int D [T][I]=...;
 int E [T][I][R]=...;
 // patient that are discharged
 int X[T][I]=...;
-
+int cost[I][I2]=...;
 
 
 //DECISON VARIABLES
@@ -54,9 +54,10 @@ dvar int+ p[T][I][I2];
 dvar int+ P[T][I];
 dvar int+ UX[T][I];
 dvar boolean y[T][I];
+dvar int+ c[T][I];
  // objective function
 // dexpr float total = sum (i in I)sum (t in T)NW[i][t]+ sum (i in I)sum (r in R)sum (t in T)n[i][r][t]  +sum (i in I)sum (r in R)sum (t in T)c[i][r][t];
-dexpr float total = sum (t in T)sum (i in I)UX[t][i];
+dexpr float total = sum (t in T)sum (i in I)c[t][i];
  maximize total;
  subject to{
  alpha<=1; 
@@ -131,8 +132,6 @@ w[t][i]==D[t][i]-x [t][i];
 sum (j in I: j!=i)p[t][i][j]<= w[t][i];
  }
  }
- 
-
 
  forall ( t in  T){
 
@@ -140,6 +139,13 @@ sum (j in I: j!=i)p[t][i][j]<= w[t][i];
 sum (j in I: j!=i)p[t][j][i]<=rc[t][i];
  }
  }
+ forall (t in T){ 
+  forall ( i in I){
+forall (j in I2){
+c[t][i]==x[t][i]*cost[i][i]+sum (j in I: j!=i)p[t][i][j]*cost[i][j]; 
  
+} 
+ } 
+}
 }
  
