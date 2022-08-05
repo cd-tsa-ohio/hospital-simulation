@@ -25,6 +25,10 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
  * @author HP
  *
  */
+/**
+ * @author HP
+ *
+ */
 public class DPExample1 extends ComparableSpaceState {
 	static LinkedList regions = new LinkedList();
 	static LinkedList resources = new LinkedList();
@@ -54,24 +58,22 @@ public class DPExample1 extends ComparableSpaceState {
 	}
 	
  	public DPExample1(DPExample1 s,int decision) {
-		decisions=new ArrayList<Integer>(s.decisions);
-		
+		decisions=new ArrayList<Integer>(s.decisions);	
 		decisions.add(decision);
 		node = new DefaultMutableTreeNode(this);
-		
+		if (decisions.size()<=3) {
+		computeValues();
+		}
 	}
  	public void computeValues() {
- 		if (decisions.size()==3) {
- 			for (int j=0;j<3;j++) {
- 			for (int i=0;i<decisions.size();i++) {
- 			totaleffectivness= values[j][i];
- 			System.out.print("Total effectivness is" + totaleffectivness);
- 			break;
- 			}
+ 	 
  		
- 			}
- 		}
- 		
+ 			 for (int i=0;i<decisions.size();i++) {
+ 				 totaleffectivness+= values[i][decisions.get(i)];
+ 				
+ 				
+ 	}
+ 			 System.out.print("Total effectivness is" + totaleffectivness);
  	}
  	public boolean CanBeadded(int cs) {
 		if(cs<6) {
@@ -87,13 +89,14 @@ public class DPExample1 extends ComparableSpaceState {
 	}
 	public String toString() {
 		 
-				return super.toString() + "DP"+ decisions;
+				return super.toString() + "DP"+ decisions + "->" + totaleffectivness;
 				
 			}
 	@Override
 	public boolean canBeGoal() {
 		return decisions.size() == 3;
 	}
+	//decide which one is better
 	public boolean isBetterThan(Searchable inState) {
 		return false;
 	}
@@ -133,7 +136,7 @@ public class DPExample1 extends ComparableSpaceState {
 		
 		if (s1.isFeasible()) states.add(s1);
 		
-		//s1.computeValues();
+		
 		if (s2.isFeasible()) states.add(s2);
 		if (s3.isFeasible()) states.add(s3);
 		if (s4.isFeasible()) states.add(s4);
