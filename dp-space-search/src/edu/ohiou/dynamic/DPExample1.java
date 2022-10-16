@@ -20,6 +20,7 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.DefaultSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
+import edu.ohiou.mfgresearch.labimp.spacesearch.TravelingSalesman;
 
 /**
  * @author HP
@@ -29,59 +30,31 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
  * @author HP
  *
  */
-public class DPExample1 extends ComparableSpaceState {
-	static LinkedList regions = new LinkedList();
-	static LinkedList resources = new LinkedList();
-	//LinkedList visitedStage = new LinkedList();
-	//LinkedList unvisitedStage = new LinkedList();
+public class DPExample1 extends ComparableSpaceState {	
 	double totaleffectivness;
-    double maxEffGoal;
    ArrayList <Integer> decisions= new ArrayList<Integer>();
 	
-	static String currentHeuristic="";
+
 	static double values[][] = { { 0, 45, 70, 90, 105,120 }, { 0, 20, 45, 75,110,150 },
 			{ 0, 50, 70, 80, 100,130 } };
-	//Dictionary values= new Hashtable();
 	
-	static {
-		regions.add(new String("1"));
-		regions.add(new String("2"));
-		regions.add(new String("3"));
-			
-		}
-	  
-	public DPExample1(int decision) {
-		
-		decisions.add(decision);
-		node = new DefaultMutableTreeNode(this);
-		
-	}
 	
  	public DPExample1(DPExample1 s,int decision) {
 		decisions=new ArrayList<Integer>(s.decisions);	
 		decisions.add(decision);
 		node = new DefaultMutableTreeNode(this);
 		if (decisions.size()<=3) {
-		computeValues();
+			evaluate();
 		}
 	}
- 	public void computeValues() {
- 	 
- 		
- 			 for (int i=0;i<decisions.size();i++) {
- 				 totaleffectivness+= values[i][decisions.get(i)];
- 				
- 				
- 	}
- 			 System.out.print("Total effectivness is" + totaleffectivness);
- 	}
- 	public boolean CanBeadded(int cs) {
-		if(cs<6) {
-			return true;
-			
-		}
-		return false;
-	}
+// 	public void computeValues() {
+// 	 
+// 		
+// 			 for (int i=0;i<decisions.size();i++) {
+// 				 totaleffectivness+= values[i][decisions.get(i)];								
+// 	}
+// 			 System.out.print("Total effectivness is" + totaleffectivness);
+// 	}
 
 	public DPExample1() {
 		node = new DefaultMutableTreeNode(this);
@@ -93,12 +66,22 @@ public class DPExample1 extends ComparableSpaceState {
 				
 			}
 	@Override
-	public boolean canBeGoal() {
-		return decisions.size() == 3;
+	public double evaluate() {
+		for (int i=0;i<decisions.size();i++) {
+			 totaleffectivness+= values[i][decisions.get(i)];								
+		}		 System.out.print("Total effectivness is" + totaleffectivness);
+		return totaleffectivness;
 	}
+	@Override
+//	public boolean canBeGoal() {
+//		return decisions.size() == 3;
+//	}
 	//decide which one is better
 	public boolean isBetterThan(Searchable inState) {
-		return false;
+		if (inState== null)
+			return false;
+		return this.totaleffectivness>= ((DPExample1) inState).totaleffectivness;
+		
 	}
 	@Override
 	public boolean equals(Searchable s) {
