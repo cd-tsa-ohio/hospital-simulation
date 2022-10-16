@@ -47,18 +47,20 @@ public class DPExample1 extends ComparableSpaceState {
 			evaluate();
 		}
 	}
-// 	public void computeValues() {
-// 	 
-// 		
-// 			 for (int i=0;i<decisions.size();i++) {
-// 				 totaleffectivness+= values[i][decisions.get(i)];								
-// 	}
-// 			 System.out.print("Total effectivness is" + totaleffectivness);
-// 	}
+
+
+ 	public boolean CanBeadded(int cs) {
+		if(cs<6) {
+			return true;
+			
+		}
+		return false;
+	}
+
 
 	public DPExample1() {
 		node = new DefaultMutableTreeNode(this);
-		// TODO Auto-generated constructor stub
+		decisions=new ArrayList<Integer>();
 	}
 	public String toString() {
 		 
@@ -87,7 +89,7 @@ public class DPExample1 extends ComparableSpaceState {
 	public boolean equals(Searchable s) {
 		DPExample1 sse2 = (DPExample1) s;
 		// TODO Auto-generated method stub
-		return  decisions == sse2.decisions;
+		return  decisions.equals(sse2.decisions);
 	}
 	
 	public int hashCode() {
@@ -98,6 +100,8 @@ public class DPExample1 extends ComparableSpaceState {
 		// TODO Auto-generated method stub
 		DPExample1 ss = new DPExample1();
 		DPExample1 gs = new DPExample1();
+		gs.decisions.add(10);
+		System.out.println("Are they equal?" + ss.equals(gs));
 		
 		BlindSearcher bs = new BlindSearcher (ss, gs);
 		bs.setApplet();
