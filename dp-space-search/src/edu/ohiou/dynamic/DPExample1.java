@@ -49,13 +49,7 @@ public class DPExample1 extends ComparableSpaceState {
 	}
 
 
- 	public boolean CanBeadded(int cs) {
-		if(cs<6) {
-			return true;
-			
-		}
-		return false;
-	}
+
 
 
 	public DPExample1() {
@@ -145,7 +139,7 @@ public class DPExample1 extends ComparableSpaceState {
 
 	@Override
 	public int[] setSearchTypes() {
-		int [] searchTypes = {SpaceSearcher.BREADTH_FIRST,SpaceSearcher.DEPTH_FIRST};
+		int [] searchTypes = {SpaceSearcher.BREADTH_FIRST,SpaceSearcher.DEPTH_FIRST,SpaceSearcher.BEST_FIRST,SpaceSearcher.ASTARALGORITHM};
 		// TODO Auto-generated method stub
 		return searchTypes;
 	}
