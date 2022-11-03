@@ -5,6 +5,7 @@ package edu.ohiou.dynamic;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -18,6 +19,7 @@ import edu.ohiou.dynamic.SpaceSearcherEx2.Example2Panel;
 import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.DefaultSpaceState;
+import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.TravelingSalesman;
@@ -86,6 +88,12 @@ public class DPExample1 extends ComparableSpaceState {
 		return  decisions.equals(sse2.decisions);
 	}
 	
+	public Comparator getComparator() {
+
+			return new DPComparator();
+
+	  }
+	
 	public int hashCode() {
 		return  decisions.hashCode();	
 	}
@@ -97,7 +105,8 @@ public class DPExample1 extends ComparableSpaceState {
 		gs.decisions.add(10);
 		System.out.println("Are they equal?" + ss.equals(gs));
 		
-		BlindSearcher bs = new BlindSearcher (ss, gs);
+//		BlindSearcher bs = new BlindSearcher (ss, gs);
+		InformedSearcher bs = new InformedSearcher (ss, gs);
 		bs.setApplet();
 		bs.display("Showing Mandvi space search");
 		
@@ -149,6 +158,19 @@ class Example2Panel extends JPanel {
 public void init () {
 	panel = new Example2Panel ();
 }
+}
 
+class DPComparator implements Comparator {
 
+	public int compare(Object o1, Object o2) {
+		if (((Searchable)o1).equals((Searchable)o2))
+			return 0;
+		DPExample1 t1 = (DPExample1) o1;
+		DPExample1 t2 = (DPExample1) o2;
+		if (t1.totaleffectivness <= 
+				t2.totaleffectivness)
+			return -1;
+		else
+			return 1;
+	}
 }
