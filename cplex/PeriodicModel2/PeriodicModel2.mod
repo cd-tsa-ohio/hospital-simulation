@@ -41,10 +41,7 @@ a[i][m]==x[i][m]*y[m];
 }
 }
 
-//forall (m in patients){
-//at [3][m]>=type[2][m]*y[m];
-//at [2][m]>=type[1][m]*y[m];
-//}
+
 
 }
  
