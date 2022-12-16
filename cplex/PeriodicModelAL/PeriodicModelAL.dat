@@ -1,7 +1,7 @@
 /*********************************************
  * OPL 12.8.0.0 Data
  * Author: HP
- * Creation Date: Oct 28, 2022 at 11:50:42 PM
+ * Creation Date: Dec 5, 2022 at 12:38:58 AM
  *********************************************/
 NPatients=20;
 Ndays=10;
@@ -10,7 +10,8 @@ T=3;
 SheetConnection sheet ("multi-period-resourceV2.xlsx");
 capacity from SheetRead (sheet,"Data!B26:K26");
 x from SheetRead (sheet,"Data!B3:K22");
-
+AL from SheetRead (sheet,"Data!AL");
 totalpatients to SheetWrite(sheet,"Results!total");
 a to SheetWrite (sheet,"Results!a");
+y to SheetWrite (sheet,"AP!AP");
 //type from SheetRead (sheet, "Type!B3:F5");
