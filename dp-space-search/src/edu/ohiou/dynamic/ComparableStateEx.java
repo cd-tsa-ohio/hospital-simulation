@@ -34,8 +34,8 @@ public class ComparableStateEx extends ComparableSpaceState {
 	public Set<Searchable> makeNewStates() {
 		// TODO Auto-generated method stub
 		Set<Searchable> states = new HashSet<Searchable>();
-		states.add(new SpaceSearcherEx2());
-		states.add(new SpaceSearcherEx2());
+		states.add(new ComparableStateEx());
+		states.add(new ComparableStateEx());
 		return states;
 	}
 	
@@ -71,7 +71,7 @@ public class ComparableStateEx extends ComparableSpaceState {
 	
 	@Override
 	public boolean equals(Searchable s) {
-		SpaceSearcherEx2 sse2 = (SpaceSearcherEx2) s;
+		ComparableStateEx sse2 = (ComparableStateEx) s;
 		// TODO Auto-generated method stub
 		return  value == sse2.value;
 	}
