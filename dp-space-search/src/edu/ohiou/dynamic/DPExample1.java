@@ -14,8 +14,8 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
-
-import edu.ohiou.dynamic.SpaceSearcherEx2.Example2Panel;
+// comment for comit
+//import edu.ohiou.dynamic.SpaceSearcherEx2.Example2Panel;
 import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.DefaultSpaceState;
@@ -44,8 +44,9 @@ public class DPExample1 extends ComparableSpaceState {
  	public DPExample1(DPExample1 s,int decision) {
 		decisions=new ArrayList<Integer>(s.decisions);	
 		decisions.add(decision);
+		parent = s;
 		node = new DefaultMutableTreeNode(this);
-		if (decisions.size()<=3) {
+		if (decisions.size()<=3 && isFeasible()) {
 			evaluate();
 		}
 	}
@@ -67,7 +68,7 @@ public class DPExample1 extends ComparableSpaceState {
 	public double evaluate() {
 		for (int i=0;i<decisions.size();i++) {
 			 totaleffectivness+= values[i][decisions.get(i)];								
-		}		 System.out.print("Total effectivness is" + totaleffectivness);
+		}		 System.out.print("\n" + toString() + ">Total effectivness is" + totaleffectivness);
 		return totaleffectivness;
 	}
 	@Override
@@ -81,6 +82,11 @@ public class DPExample1 extends ComparableSpaceState {
 		return this.totaleffectivness>= ((DPExample1) inState).totaleffectivness;
 		
 	}
+	
+	public boolean canBeGoal() {
+		return decisions.size() ==3;
+	}
+	
 	@Override
 	public boolean equals(Searchable s) {
 		DPExample1 sse2 = (DPExample1) s;
@@ -169,8 +175,8 @@ class DPComparator implements Comparator {
 		DPExample1 t2 = (DPExample1) o2;
 		if (t1.totaleffectivness <= 
 				t2.totaleffectivness)
-			return -1;
-		else
 			return 1;
+		else
+			return -1;
 	}
 }
