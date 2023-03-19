@@ -40,9 +40,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		node = new DefaultMutableTreeNode(this);
 		decisions=new ArrayList<Patients>();
 	}
-	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions)
+	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions, int cd)
 	{
-		currentDay = s.currentDay+1;
+		currentDay = cd;
 		parent = s;
 		this.decisions=decisions;
 		node = new DefaultMutableTreeNode(this);
@@ -88,7 +88,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	
 	public String toString () 
 	{
-		return super.toString() + "DP"+ decisions + "->" + remainingCap;
+		return super.toString() + "DP"+ decisions + "->" + currentDay + "#pat " + evaluate();
 	}
 // parent class
 	// make only feasible states
@@ -97,14 +97,23 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public Set<Searchable> makeNewStates()
 	{
 		Set<Searchable>  states=  new HashSet<Searchable>();
-		ArrayList <Patients> d1= map.get(currentDay+1);
-		for (Patients p : d1)
+		for (int i=1; i<=5;i++)
 		{
-			ArrayList <Patients> d2= new ArrayList <Patients> ();
-			d2.add(p);
-			states.add( new PeriodicProblemDay(this,d2));
-			
+			ArrayList <Patients> d1= map.get(currentDay+i);
+			if (d1 !=null)
+			{
+				for (Patients p : d1)
+				{
+					ArrayList <Patients> d2= new ArrayList <Patients> ();
+					d2.add(p);
+					states.add( new PeriodicProblemDay(this,d2,currentDay+i));
+					
+				}
+				break;
+			}
 		}
+		
+		
 		
 	
 		return states;
@@ -114,7 +123,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public boolean equals(Searchable s) {
 		PeriodicProblemDay sse2 = (PeriodicProblemDay) s;
 		// TODO Auto-generated method stub
-		return  decisions.equals(sse2.decisions);
+		return  sse2.decisions==decisions && sse2.currentDay== currentDay ;
 	}
 
 	@Override
@@ -125,22 +134,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	}
 	
 	@Override
-	public double evaluate() {
-//		for (int i=0;i<decisions.size();i++) {
-//			minimumPAtient+= data[i][decisions.get(i)];								
-//		}		 System.out.print("\n" + toString() + ">Total effectivness is" + minimumPAtient);
-//		return minimumPAtient;
-		// int cap =2;
-		//remainingCap=0;
-		
-		
-		for (int i=0;i<decisions.size();i++)
-		{
-			//PatientTaken= 
-			//remainingCap=cap-remainingCap;
-			//cap=remainingCap;
-		}
-		return remainingCap;
+	public double evaluate() 
+	{		
+		return decisions.size();
 	}
 	
 //classes	
