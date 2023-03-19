@@ -13,6 +13,9 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 // comment for comit
 //import edu.ohiou.dynamic.SpaceSearcherEx2.Example2Panel;
@@ -108,13 +111,18 @@ public class DPExample1 extends ComparableSpaceState {
 		// TODO Auto-generated method stub
 		DPExample1 ss = new DPExample1();
 		DPExample1 gs = new DPExample1();
+		SpaceSearcher bs;
 		gs.decisions.add(10);
+		String a = "I";
 		System.out.println("Are they equal?" + ss.equals(gs));
-		
-//		BlindSearcher bs = new BlindSearcher (ss, gs);
-		InformedSearcher bs = new InformedSearcher (ss, gs);
+		if (a.contentEquals("B")) {
+			bs = new BlindSearcher (ss, gs);
+		}
+		else {
+			bs = new InformedSearcher (ss, gs);
+		}
 		bs.setApplet();
-		bs.display("Showing Mandvi space search");
+		bs.display("Showing Mandvi space search, searcher is " + a);
 		
 
 	}
@@ -158,12 +166,30 @@ public class DPExample1 extends ComparableSpaceState {
 		// TODO Auto-generated method stub
 		return searchTypes;
 	}
-class Example2Panel extends JPanel {
-		
-	}
+
 public void init () {
-	panel = new Example2Panel ();
+	panel = new Example2Panel (this);
 }
+}
+
+class Example2Panel extends JPanel {
+	
+	public Example2Panel  (DPExample1 dpe) {
+		
+		Object [] names = {"a", "b", "c", "d", "e", "f"};
+		Object [][] vals = new Object [dpe.values.length][dpe.values[0].length];
+		
+		for (int i = 0; i< vals.length; i++) {
+			for (int j = 0; j < vals[0].length; j++ ) {
+				vals[i][j] = dpe.values[i][j];
+			}
+		}
+		JTable t = new JTable(new DefaultTableModel(vals, names));
+		this.add(t);
+	}
+	
+	
+	
 }
 
 class DPComparator implements Comparator {
