@@ -18,50 +18,61 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 
-public class PeriodicProblem extends ComparableSpaceState {
 
+public class PeriodicProblemDay extends ComparableSpaceState {
 // parameters
 	
 	int remainingCap;
+	
+	int PatientTaken;
+	int currentDay;
 	// need to have decision day instead of decisions
 	//variable for free capacity
-	ArrayList <Integer> decisions= new ArrayList<Integer>();
+	//array list of patients
+	ArrayList <Patients> decisions= new ArrayList<Patients>();
 	
 	//static int data[][]= {{0,0,1,1,1},{0,1,1,1,0},{1,0,0,0,0},{0,1,1,1,0},{1,1,1,1,0}};
 	static int data[][]= {{1,3},{1,2},{3,1},{4,1}};
 	
 	static int capacity []= {2,2,2,2,2};
-	static  Map    map= new HashMap();
+	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
 	static 	{printIndex = true;}
 	//constructors
-	public PeriodicProblem()
+	public PeriodicProblemDay()
 	{
 		node = new DefaultMutableTreeNode(this);
-		decisions=new ArrayList<Integer>();
+		decisions=new ArrayList<Patients>();
 	}
-	public PeriodicProblem(PeriodicProblem s,int decision)
+	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions)
 	{
-		decisions=new ArrayList<Integer>(s.decisions);	
-		decisions.add(decision);
+		currentDay = s.currentDay+1;
 		parent = s;
+		this.decisions=decisions;
 		node = new DefaultMutableTreeNode(this);
-		if (decisions.size()<=3 && isFeasible()) {
-			evaluate();
-		}
-	}//methods
+		
+	}
+	//methods
 	private boolean isFeasible() 
 	{
 		return true;
 	}
+	//this need to be static
 	public void  createPatients ()
 	{
 		for (int i=0;i<data.length;i++) 
 		{
-			for (int j=0;j<=2; j++)
+			ArrayList<Patients> pat=map.get(data[i][0]);
+			if (pat==null)
 			{
-				map.put(i, new Patients(data[i][j],data[i][j+1]));
-			break;			
-			}		
+				ArrayList<Patients> Npat=new ArrayList<Patients> ();
+				Npat.add(new Patients(data[i][0],data[i][1]));
+				map.put(data[i][0],Npat);
+			}
+			else
+			{
+				pat.add(new Patients(data[i][0],data[i][1]));
+			}
+											
 		}	
 
 	}
@@ -69,8 +80,8 @@ public class PeriodicProblem extends ComparableSpaceState {
 	public static void main(String[] args)
 	{
 
-		PeriodicProblem ss = new PeriodicProblem();
-		PeriodicProblem gs = new PeriodicProblem();
+		PeriodicProblemDay ss = new PeriodicProblemDay();
+		PeriodicProblemDay gs = new PeriodicProblemDay();
 		BlindSearcher bs = new BlindSearcher (ss, gs);
 		ss.createPatients();
 		System.out.print(map);
@@ -93,15 +104,21 @@ public class PeriodicProblem extends ComparableSpaceState {
 
 	public Set<Searchable> makeNewStates() {
 		Set<Searchable>  states=  new HashSet<Searchable>();
-
-
-
+		ArrayList <Patients> d1= map.get(currentDay+1);
+		for (Patients p : d1)
+		{
+			ArrayList <Patients> d2= new ArrayList <Patients> ();
+			d2.add(p);
+			states.add( new PeriodicProblemDay(this,d2));			
+		}
+		
+	
 		return states;
 	}
 
 	@Override
 	public boolean equals(Searchable s) {
-		PeriodicProblem sse2 = (PeriodicProblem) s;
+		PeriodicProblemDay sse2 = (PeriodicProblemDay) s;
 		// TODO Auto-generated method stub
 		return  decisions.equals(sse2.decisions);
 	}
@@ -119,13 +136,15 @@ public class PeriodicProblem extends ComparableSpaceState {
 //			minimumPAtient+= data[i][decisions.get(i)];								
 //		}		 System.out.print("\n" + toString() + ">Total effectivness is" + minimumPAtient);
 //		return minimumPAtient;
-		int cap =2;
-		remainingCap=0;
+		// int cap =2;
+		//remainingCap=0;
+		
 		
 		for (int i=0;i<decisions.size();i++)
 		{
-			remainingCap=cap-remainingCap;
-			cap=remainingCap;
+			//PatientTaken= 
+			//remainingCap=cap-remainingCap;
+			//cap=remainingCap;
 		}
 		return remainingCap;
 	}
