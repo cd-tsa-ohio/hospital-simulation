@@ -9,14 +9,17 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import edu.ohiou.dynamic.DPExample1.Example2Panel;
-import edu.ohiou.dynamic.TestClass.Patients;
+
+//import edu.ohiou.dynamic.DPExample1.Example2Panel;
+//import edu.ohiou.dynamic.TestClass.Patients;
+
 import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 
 public class PeriodicProblem extends ComparableSpaceState {
+
 // parameters
 	
 	int remainingCap;
@@ -48,13 +51,7 @@ public class PeriodicProblem extends ComparableSpaceState {
 	}//methods
 	private boolean isFeasible() 
 	{
-		int sum=0;
-		for (int i: decisions) {
-			sum+=i;
-			
-		}
-	
-		return sum<=2 && decisions.size()<=3;
+		return true;
 	}
 	public void  createPatients ()
 	{
@@ -66,7 +63,7 @@ public class PeriodicProblem extends ComparableSpaceState {
 			break;			
 			}		
 		}	
-		
+
 	}
 
 	public static void main(String[] args)
@@ -80,33 +77,25 @@ public class PeriodicProblem extends ComparableSpaceState {
 		bs.setApplet();
 		bs.display("Periodic Problem");
 	}
+
 	
 	public String toString () 
 	{
 		return super.toString() + "DP"+ decisions + "->" + remainingCap;
+
 	}
-// parent class
+	// parent class
 	// make only feasible states
 	//also needs to have date
 	@Override
-	public Set<Searchable> makeNewStates()
-	{
+
+
+
+	public Set<Searchable> makeNewStates() {
 		Set<Searchable>  states=  new HashSet<Searchable>();
-		PeriodicProblem s1= new PeriodicProblem(this,0);
-		PeriodicProblem s2= new PeriodicProblem(this,1);
-		PeriodicProblem s3= new PeriodicProblem (this,2);
-		PeriodicProblem s4= new PeriodicProblem (this,3);
-		
-	//	PeriodicProblem s4= new PeriodicProblem (this, 3);
-		if (s1.isFeasible()) states.add(s1);
-		
-		
-		if (s2.isFeasible()) states.add(s2);
-		if (s3.isFeasible()) states.add(s3);
-		if (s4.isFeasible()) states.add(s4);
-		//states.add(s4);
-		
-	//	states.add(s2);
+
+
+
 		return states;
 	}
 
@@ -123,7 +112,7 @@ public class PeriodicProblem extends ComparableSpaceState {
 		// TODO Auto-generated method stub
 		return searchTypes;
 	}
-	
+
 	@Override
 	public double evaluate() {
 //		for (int i=0;i<decisions.size();i++) {
@@ -140,6 +129,7 @@ public class PeriodicProblem extends ComparableSpaceState {
 		}
 		return remainingCap;
 	}
+
 	
 //classes	
 class Example2Panel extends JPanel 
@@ -150,6 +140,7 @@ public void init ()
 {
 	panel = new Example2Panel ();
 }
+
 class Patients
 {
 	 int arrivalDay;
@@ -165,6 +156,7 @@ class Patients
 	 {
 	 return ( "day " + arrivalDay + " los " + los);
 	 }
+
 
 }
 }
