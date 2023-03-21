@@ -9,12 +9,15 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import edu.ohiou.dynamic.DPExample1.Example2Panel;
-import edu.ohiou.dynamic.TestClass.Patients;
+
+//import edu.ohiou.dynamic.DPExample1.Example2Panel;
+//import edu.ohiou.dynamic.TestClass.Patients;
+
 import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
+
 
 public class PeriodicProblemDay extends ComparableSpaceState {
 // parameters
@@ -71,7 +74,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			}
 											
 		}	
-		
+
 	}
 
 	public static void main(String[] args)
@@ -85,20 +88,28 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		bs.setApplet();
 		bs.display("Periodic Problem");
 	}
+
 	
 	public String toString () 
 	{
+
 		return super.toString() + "DP"+ decisions + "->" + currentDay + "#pat " + evaluate();
+
+		
+
 	}
-// parent class
+	// parent class
 	// make only feasible states
 	//also needs to have date
 	@Override
-	public Set<Searchable> makeNewStates()
-	{
+
+
+
+	public Set<Searchable> makeNewStates() {
 		Set<Searchable>  states=  new HashSet<Searchable>();
 		for (int i=1; i<=5;i++)
 		{
+
 			ArrayList <Patients> d1= map.get(currentDay+i);
 			if (d1 !=null)
 			{
@@ -111,6 +122,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				}
 				break;
 			}
+
+		
 		}
 		
 		
@@ -132,12 +145,13 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		// TODO Auto-generated method stub
 		return searchTypes;
 	}
-	
+
 	@Override
 	public double evaluate() 
 	{		
 		return decisions.size();
 	}
+
 	
 //classes	
 class Example2Panel extends JPanel 
@@ -148,6 +162,7 @@ public void init ()
 {
 	panel = new Example2Panel ();
 }
+
 class Patients
 {
 	 int arrivalDay;
@@ -163,6 +178,7 @@ class Patients
 	 {
 	 return ( "day " + arrivalDay + " los " + los);
 	 }
+
 
 }
 }
