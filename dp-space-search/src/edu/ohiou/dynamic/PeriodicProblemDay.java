@@ -21,6 +21,7 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
+import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
 import edu.ohiou.mfgresearch.labimp.table.ModelTable;
 import edu.ohiou.mfgresearch.labimp.table.RectangularTableModel;
 import edu.ohiou.mfgresearch.labimp.table.TableCellGenerator;
@@ -54,7 +55,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions, int cd)
 	{
 		currentDay = cd;
-		NextDayCap=capacity[cd];
+		NextDayCap=capacity[cd]; // it is next day, but array index starts at 0
 		parent = s;
 		this.decisions=decisions;
 		nextDayCap();
@@ -66,6 +67,15 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{
 		return true;
 	}
+	
+	public boolean canBeGoal() {
+		return false;
+	}
+	
+	public boolean isSearchComplete(SpaceSearcher ss) {
+		return false;
+	}
+
 	//this need to be static
 	public void  createPatients ()
 	{
@@ -103,7 +113,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{
 
 		PeriodicProblemDay ss = new PeriodicProblemDay();
+		ss.currentDay = 0;
 		PeriodicProblemDay gs = new PeriodicProblemDay();
+		gs.currentDay = 10;
 		BlindSearcher bs = new BlindSearcher (ss, gs);
 		ss.createPatients();
 		System.out.print(map);
@@ -165,10 +177,14 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		// TODO Auto-generated method stub
 		return  sse2.decisions==decisions && sse2.currentDay== currentDay ;
 	}
+	
+	public int hashCode() {
+		return  decisions.hashCode() + currentDay;	
+	}
 
 	@Override
 	public int[] setSearchTypes() {
-		int [] searchTypes = {BlindSearcher.BEST_FIRST,BlindSearcher.DEPTH_FIRST};
+		int [] searchTypes = {BlindSearcher.BREADTH_FIRST,BlindSearcher.DEPTH_FIRST};
 		// TODO Auto-generated method stub
 		return searchTypes;
 	}
@@ -193,7 +209,7 @@ class PeriodicDayPanel extends JPanel
 	public PeriodicDayPanel () {
 		Object [] ps = {6,7,8,9,10} ;decisions.toArray();
 		Object [] days  = {1,2,3,4,5};
-	RectangularTableModel rtm = new RectangularTableModel (ps, days);
+	RectangularTableModel rtm = new RectangularTableModel (ps, days, new PDGenerator());
 //	rtm.display();
 //	this.add(new JLabel ("Sormaz"));
 	ModelTable mt = new ModelTable(rtm);
