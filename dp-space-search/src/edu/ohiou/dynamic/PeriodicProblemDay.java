@@ -1,12 +1,16 @@
 package edu.ohiou.dynamic;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 
@@ -17,6 +21,9 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
+import edu.ohiou.mfgresearch.labimp.table.ModelTable;
+import edu.ohiou.mfgresearch.labimp.table.RectangularTableModel;
+import edu.ohiou.mfgresearch.labimp.table.TableCellGenerator;
 
 
 public class PeriodicProblemDay extends ComparableSpaceState {
@@ -42,6 +49,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{
 		node = new DefaultMutableTreeNode(this);
 		decisions=new ArrayList<Patients>();
+//		panel = new PeriodicDayPanel ();
 	}
 	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions, int cd)
 	{
@@ -51,9 +59,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		this.decisions=decisions;
 		nextDayCap();
 		node = new DefaultMutableTreeNode(this);
-
-
 	}
+
 	//methods
 	private boolean isFeasible() 
 	{
@@ -79,7 +86,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		}	
 
 	}
-	private int nextDayCap()
+	private void nextDayCap()
 
 	{
 		for (Patients p:decisions)
@@ -108,8 +115,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public String toString () 
 	{
 
-		return super.toString() + "DP"+ decisions + "->" + currentDay + "#pat " + evaluate()
-								+;
+		return super.toString() + "PPD"+ decisions + "->" + currentDay + "#pat " + evaluate();
 
 
 
@@ -172,17 +178,51 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{		
 		return decisions.size();
 	}
-
-
-	//classes	
-	class Example2Panel extends JPanel 
-	{
-
-	}
+	
 	public void init () 
-	{
-		panel = new Example2Panel ();
+	{		
+			panel = new PeriodicDayPanel ();
 	}
+
+
+
+	
+//classes	
+class PeriodicDayPanel extends JPanel 
+{
+	public PeriodicDayPanel () {
+		Object [] ps = {6,7,8,9,10} ;decisions.toArray();
+		Object [] days  = {1,2,3,4,5};
+	RectangularTableModel rtm = new RectangularTableModel (ps, days);
+//	rtm.display();
+//	this.add(new JLabel ("Sormaz"));
+	ModelTable mt = new ModelTable(rtm);
+//	mt.init();
+//	mt.display("model table");
+	this.add(new JScrollPane(mt), BorderLayout.CENTER);
+	}
+	}
+
+class PDGenerator implements TableCellGenerator {
+
+	@Override
+	public Object makeTableCell(Object o1, Object o2) {
+		Integer i1 = (Integer) o1;
+		Integer i2 = (Integer) o2;
+		// TODO Auto-generated method stub
+		return  (Integer) i1+i2;
+	}
+
+	@Override
+	public void updateRelation(Object o1, Object o2, Object dataValue) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+
+
 
 	class Patients
 	{
