@@ -43,7 +43,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //	static int data[][]= {{1,3},{1,2},{3,1},{4,1}};
 	static int data[][]= {{1,3},{1,2},{2,1},{3,1}};
 
-	static int capacity []= {2,2,2,2,2};
+	static int capacity []= {1,1,1,1,1,1,1};
 	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
 	static 	{printIndex = true;}
 	//constructors
