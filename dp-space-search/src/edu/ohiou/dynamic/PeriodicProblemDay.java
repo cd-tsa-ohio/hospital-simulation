@@ -40,7 +40,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	ArrayList <Patients> decisions= new ArrayList<Patients>();
 
 	//static int data[][]= {{0,0,1,1,1},{0,1,1,1,0},{1,0,0,0,0},{0,1,1,1,0},{1,1,1,1,0}};
-	static int data[][]= {{1,3},{1,2},{3,1},{4,1}};
+//	static int data[][]= {{1,3},{1,2},{3,1},{4,1}};
+	static int data[][]= {{1,3},{1,2},{2,1},{3,1}};
 
 	static int capacity []= {2,2,2,2,2};
 	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
@@ -127,7 +128,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public String toString () 
 	{
 
-		return super.toString() + "PPD"+ decisions + "->" + currentDay + "#pat " + evaluate();
+		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + decisions + ","  + evaluate();
 
 
 
@@ -253,7 +254,7 @@ class PDGenerator implements TableCellGenerator {
 		@Override
 		public String toString ()
 		{
-			return ( "day " + arrivalDay + " los " + los);
+			return ( "<arr " + arrivalDay + ",los " + los +">");
 		}
 		public boolean isStayingDay(int day)
 		{
