@@ -46,6 +46,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	static int capacity []= {1,1,1,1,1,1,1};
 	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
 	static 	{printIndex = true;}
+   static  ArrayList <Patients> nd= new ArrayList <Patients> ();
+   
 	//constructors
 	public PeriodicProblemDay()
 	{
@@ -97,9 +99,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		}	
 
 	}
-	private void nextDayCap()
+	private int nextDayCap()
 
 	{
+		NextDayCap=capacity[currentDay+1];
 		for (Patients p:decisions)
 		{
 			if(p.isStayingDay(currentDay+1))
@@ -108,6 +111,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 			}
 		}
+		return NextDayCap;
+		
 	}
 
 	public static void main(String[] args)
@@ -128,7 +133,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public String toString () 
 	{
 
-		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + decisions + ","  + evaluate();
+
+		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + decisions + ","  + evaluate()+"flagged patient "+nd;
+
 
 
 
@@ -150,6 +157,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		Set<Searchable>  states=  new HashSet<Searchable>();		
 		ArrayList <Patients> d2= new ArrayList <Patients> ();
 		ArrayList <Patients> d1= map.get(currentDay+1);
+	
+		
 		for (Patients p2 : decisions)
 		{
 			if(p2.isStayingDay(currentDay+1))
@@ -163,7 +172,15 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			for (Patients p : d1)
 			{
 				ArrayList <Patients> d3= new ArrayList <Patients> (d2);
-				d3.add(p);
+				
+				if (nextDayCap()>0)
+				{
+					d3.add(p);
+				}	
+				else
+				{
+					nd.add(p);
+				}
 				states.add( new PeriodicProblemDay(this,d3,currentDay+1));
 			}
 		}
