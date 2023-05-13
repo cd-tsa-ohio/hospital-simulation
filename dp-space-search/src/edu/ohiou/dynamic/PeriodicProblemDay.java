@@ -1,6 +1,7 @@
 package edu.ohiou.dynamic;
 
 import java.awt.BorderLayout;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,22 +38,23 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	// need to have decision day instead of decisions
 	//variable for free capacity
 	//array list of patients
-	ArrayList <Patients> decisions= new ArrayList<Patients>();
+	ArrayList <Patients> statePat= new ArrayList<Patients>();
 
 	//static int data[][]= {{0,0,1,1,1},{0,1,1,1,0},{1,0,0,0,0},{0,1,1,1,0},{1,1,1,1,0}};
 //	static int data[][]= {{1,3},{1,2},{3,1},{4,1}};
 	static int data[][]= {{1,3},{1,2},{2,1},{3,1}};
 
-	static int capacity []= {1,1,1,1,1,1,1};
+	static int capacity []= {2,2,2,2,1,1,1};
 	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
 	static 	{printIndex = true;}
    static  ArrayList <Patients> nd= new ArrayList <Patients> ();
+   static ArrayList <Patients> allAceepted= new ArrayList <Patients> ();
    
 	//constructors
 	public PeriodicProblemDay()
 	{
 		node = new DefaultMutableTreeNode(this);
-		decisions=new ArrayList<Patients>();
+		statePat=new ArrayList<Patients>();
 //		panel = new PeriodicDayPanel ();
 	}
 	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions, int cd)
@@ -60,7 +62,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		currentDay = cd;
 		NextDayCap=capacity[cd]; // it is next day, but array index starts at 0
 		parent = s;
-		this.decisions=decisions;
+		this.statePat=decisions;
 		nextDayCap();
 		node = new DefaultMutableTreeNode(this);
 	}
@@ -99,11 +101,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		}	
 
 	}
+	
 	private int nextDayCap()
 
 	{
 		NextDayCap=capacity[currentDay+1];
-		for (Patients p:decisions)
+		for (Patients p:statePat)
 		{
 			if(p.isStayingDay(currentDay+1))
 			{
@@ -122,9 +125,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		ss.currentDay = 0;
 		PeriodicProblemDay gs = new PeriodicProblemDay();
 		gs.currentDay = 10;
+		
 		BlindSearcher bs = new BlindSearcher (ss, gs);
+		
 		ss.createPatients();
 		System.out.print(map);
+		//System.out.print(getALlPatient());
 		bs.setApplet();
 		bs.display("Periodic Problem");
 	}
@@ -134,7 +140,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{
 
 
-		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + decisions + ","  + evaluate()+"flagged patient "+nd;
+		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate()+"flagged patient "+nd ;
 
 
 
@@ -150,38 +156,42 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	//	then
 	// create new State and copy all patients from previous state and new patient lost
 	// call NextDayCap method 
-	//
+	// find code for permutation and combination and test it independently
 
 	public Set<Searchable> makeNewStates() 
 	{
 		Set<Searchable>  states=  new HashSet<Searchable>();		
-		ArrayList <Patients> d2= new ArrayList <Patients> ();
-		ArrayList <Patients> d1= map.get(currentDay+1);
+		ArrayList <Patients> newStPat= new ArrayList <Patients> ();
+		ArrayList <Patients> nextDyPat= map.get(currentDay+1);
 	
 		
-		for (Patients p2 : decisions)
+		for (Patients p2 : statePat)
 		{
 			if(p2.isStayingDay(currentDay+1))
 
 			{
-				d2.add(p2);
+				newStPat.add(p2);
 			}
 		}	
-		if (d1 !=null)
+		states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
+		if (nextDyPat !=null)
 		{
-			for (Patients p : d1)
+			
+			for (Patients p : nextDyPat)
 			{
-				ArrayList <Patients> d3= new ArrayList <Patients> (d2);
+				ArrayList <Patients> allNewPat= new ArrayList <Patients> (newStPat);
 				
 				if (nextDayCap()>0)
 				{
-					d3.add(p);
+					allNewPat.add(p);
+		
 				}	
 				else
 				{
 					nd.add(p);
 				}
-				states.add( new PeriodicProblemDay(this,d3,currentDay+1));
+				states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));
+				allAceepted.addAll(allNewPat);
 			}
 		}
 			
@@ -193,11 +203,11 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public boolean equals(Searchable s) {
 		PeriodicProblemDay sse2 = (PeriodicProblemDay) s;
 		// TODO Auto-generated method stub
-		return  sse2.decisions==decisions && sse2.currentDay== currentDay ;
+		return  sse2.statePat==statePat && sse2.currentDay== currentDay ;
 	}
 	
 	public int hashCode() {
-		return  decisions.hashCode() + currentDay;	
+		return  statePat.hashCode() + currentDay;	
 	}
 
 	@Override
@@ -210,7 +220,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	@Override
 	public double evaluate() 
 	{		
-		return decisions.size();
+		return statePat.size();
 	}
 	
 	public void init () 
@@ -218,33 +228,52 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			panel = new PeriodicDayPanel ();
 	}
 
-
+// get all patient method
+	public static ArrayList<Patients> getAllPatient ()
+	{
+		ArrayList <Patients>  p= new ArrayList();
+		for (int i =1;i<=map.size();i++)
+		{
+			p.addAll( map.get(i));
+		
+		}
+	 return p;
+	}
 
 	
 //classes	
 class PeriodicDayPanel extends JPanel 
 {
 	public PeriodicDayPanel () {
-		Object [] ps = {6,7,8,9,10} ;decisions.toArray();
+		ArrayList  p= new ArrayList  ();
+		
+		Object [] ps=getAllPatient().toArray();
+				
 		Object [] days  = {1,2,3,4,5};
-	RectangularTableModel rtm = new RectangularTableModel (ps, days, new PDGenerator());
-//	rtm.display();
-//	this.add(new JLabel ("Sormaz"));
+		Object [] ps2=statePat.toArray();
+		RectangularTableModel rtm = new RectangularTableModel (ps, days, new PDGenerator());
+		RectangularTableModel rtm2 = new RectangularTableModel (ps2, days, new PDGenerator());
+    
 	ModelTable mt = new ModelTable(rtm);
-//	mt.init();
-//	mt.display("model table");
+	ModelTable mt2 = new ModelTable(rtm2);
 	this.add(new JScrollPane(mt), BorderLayout.CENTER);
+	this.add(new JScrollPane(mt2),BorderLayout.NORTH);
+	//this.add(new JLabel(statePat.toString()),BorderLayout.SOUTH);
 	}
+	
+	
 	}
+//implement a static method getallPatients and in panel i call the method
 
 class PDGenerator implements TableCellGenerator {
 
 	@Override
 	public Object makeTableCell(Object o1, Object o2) {
-		Integer i1 = (Integer) o1;
+		Patients p1 = (Patients) o1;
 		Integer i2 = (Integer) o2;
 		// TODO Auto-generated method stub
-		return  (Integer) i1+i2;
+		
+		return  p1.isStayingDay(i2);
 	}
 
 	@Override
@@ -257,28 +286,33 @@ class PDGenerator implements TableCellGenerator {
 
 
 
+// give name in patient class make variable
 
-	class Patients
+}
+class Patients
+{
+	int arrivalDay;
+	int los;
+	String name;
+	static int count=0;
+	public Patients(int a, int b) 
 	{
-		int arrivalDay;
-		int los;
-		public Patients(int a, int b) 
-		{
-			this.arrivalDay =a;
-			this.los=b;
-
-		}
-		@Override
-		public String toString ()
-		{
-			return ( "<arr " + arrivalDay + ",los " + los +">");
-		}
-		public boolean isStayingDay(int day)
-		{
-			return day>=arrivalDay && day<arrivalDay+los;
-		}
-
+		count ++;
+		this.name="P"+ count;
+		this.arrivalDay =a;
+		this.los=b;
 
 	}
+	@Override
+	public String toString ()
+	{
+		return (  name +" <arr " + arrivalDay + ",los " + los +">");
+	}
+	public boolean isStayingDay(int day)
+	{
+		return day>=arrivalDay && day<arrivalDay+los;
+	}
+
+
 }
 
