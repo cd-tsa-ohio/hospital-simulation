@@ -3,6 +3,7 @@ package edu.ohiou.dynamic;
 import java.awt.BorderLayout;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //	static int data[][]= {{1,3},{1,2},{3,1},{4,1}};
 	static int data[][]= {{1,3},{1,2},{2,1},{3,1}};
 
-	static int capacity []= {2,2,2,2,1,1,1};
+	static int capacity []= {1,1,1,1,1,1,1};
 	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
 	static 	{printIndex = true;}
    static  ArrayList <Patients> nd= new ArrayList <Patients> ();
@@ -132,7 +133,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		System.out.print(map);
 		//System.out.print(getALlPatient());
 		bs.setApplet();
-		bs.display("Periodic Problem");
+		bs.display("Periodic Problem with the capacity " + Arrays.toString(capacity));
 	}
 
 
@@ -173,6 +174,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				newStPat.add(p2);
 			}
 		}	
+		// thsi adds stet for decision that no new patients will be taken
 		states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
 		if (nextDyPat !=null)
 		{
@@ -184,13 +186,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				if (nextDayCap()>0)
 				{
 					allNewPat.add(p);
-		
+					states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));		
 				}	
 				else
 				{
 					nd.add(p);
 				}
-				states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));
 				allAceepted.addAll(allNewPat);
 			}
 		}
