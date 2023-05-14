@@ -174,7 +174,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				newStPat.add(p2);
 			}
 		}	
-		// thsi adds stet for decision that no new patients will be taken
+		// this adds state for decision that no new patients will be taken
 		states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
 		if (nextDyPat !=null)
 		{
