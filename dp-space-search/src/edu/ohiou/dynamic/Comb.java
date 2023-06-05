@@ -1,6 +1,9 @@
 package edu.ohiou.dynamic;
 
+import java.io.IOException;
+import java.io.Console;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Comb 
@@ -11,9 +14,11 @@ public class Comb
 	}
 
 	
-public static 	List<List<Integer>> createCombinations(List<Integer> iterable, int r) 
+public static 	List<List<Integer>> createCombinations(List<Integer> iterable, int r) throws Exception 
 {
 	List<List<Integer>>resList = new ArrayList<>();
+//	Console c = System.console();
+	int count =0;
 	
 	List<Integer> runList =new ArrayList<>();
 	int n=iterable.size();
@@ -56,15 +61,26 @@ public static 	List<List<Integer>> createCombinations(List<Integer> iterable, in
 		}		
 		indices[i] += 1;	
 		
-		for (int j = i ; j < r; j++) {
+		for (int j = i+1 ; j < r; j++) {
 			indices[j] = indices[j - 1] + 1;
 		}
+		System.out.println("indices: " + Arrays.toString(indices));
+//		System.out.print("enter something>");
+//		
+//
+//		String  ab = c.readLine();
+
 		for (int ii = 0; ii < r; ii++)
 		 {
 			runList.add(iterable.get(indices[ii])) ;
 	     }
-
-		System.out.print(resList);
+		resList.add(runList);
+		System.out.println("run list " + runList);
+		count++;
+		System.out.println("count" + count);
+		if (count > 15) {
+			throw new Exception("aborting infintie loop");
+		}
 		}
 		
 	
@@ -75,14 +91,22 @@ public static 	List<List<Integer>> createCombinations(List<Integer> iterable, in
 
 public static void main(String[] args)
 {
+//	Console c = System.console();
+//	String  ab = c.readLine();
+	
 	List<Integer>a = new ArrayList<>();
   a.add(1);
   a.add(2);
   a.add(3);
   a.add(4);
- // a.add(5);
+  a.add(5);
   Comb b= new Comb();
- System.out.print( b.createCombinations(a, 2));
+ try {
+	System.out.print( b.createCombinations(a, 3));
+} catch (Exception e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
 
 }
 }
