@@ -42,24 +42,23 @@ public class Comb
 		//System.out.print(resList);
 
 		boolean a = true;
-
+		boolean broken = false;
 		while (a)
 		{
 			runList =new ArrayList<>();
 			int i =0;
 			for ( i = r - 1; i >= 0; i--)
 			{
-				boolean broken = false;
+				broken = false;
 				if ( indices[i] != i + n - r)
 				{
 					broken = true;
 					break;
 				}
-
-				if (!broken) {
-					return resList;
-				}
-			}		
+			}	
+			if (!broken) {
+				return resList;
+			}
 			indices[i] += 1;	
 
 			for (int j = i+1 ; j < r; j++) {
