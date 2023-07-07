@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,29 +40,30 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	// need to have decision day instead of decisions
 	//variable for free capacity
 	//array list of patients
-	ArrayList <Patients> statePat= new ArrayList<Patients>();
+	
+	
 
-	//static int data[][]= {{0,0,1,1,1},{0,1,1,1,0},{1,0,0,0,0},{0,1,1,1,0},{1,1,1,1,0}};
-//	static int data[][]= {{1,3},{1,2},{3,1},{4,1}};
+	
 	static int data[][]= {{1,3},{1,2},{2,1},{3,1}};
 
-	static int capacity []= {1,1,1,1,1,1,1};
+	static int capacity []= {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
+	//creating a map of patients objects with key value an integer
 	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
 	static 	{printIndex = true;}
    static  ArrayList <Patients> nd= new ArrayList <Patients> ();
    static ArrayList <Patients> allAceepted= new ArrayList <Patients> ();
-   
-	//constructors
+ //this holds informaiton about patients
+   ArrayList <Patients> statePat= new ArrayList<Patients>();
+	//constructors 
 	public PeriodicProblemDay()
 	{
 		node = new DefaultMutableTreeNode(this);
-		statePat=new ArrayList<Patients>();
-//		panel = new PeriodicDayPanel ();
+		//statePat=new ArrayList<Patients>();
 	}
 	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions, int cd)
 	{
 		currentDay = cd;
-		NextDayCap=capacity[cd]; // it is next day, but array index starts at 0
+		NextDayCap=capacity[cd]; 
 		parent = s;
 		this.statePat=decisions;
 		nextDayCap();
@@ -87,15 +89,19 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{
 		for (int i=0;i<data.length;i++) 
 		{
+			//retrieving elements from data the 0 index their arrival day, their lenght of stay by 1
 			ArrayList<Patients> pat=map.get(data[i][0]);
+			//if there are no patients on this day in the map
 			if (pat==null)
-			{
+			{	
+				//we create a patient with arrival day and los, and put that in the map with the key as arrival day
 				ArrayList<Patients> Npat=new ArrayList<Patients> ();
 				Npat.add(new Patients(data[i][0],data[i][1]));
 				map.put(data[i][0],Npat);
 			}
 			else
-			{
+			{	
+				//otherwise we create new patient add this into the existing patients who arrive on that day
 				pat.add(new Patients(data[i][0],data[i][1]));
 			}
 
@@ -107,6 +113,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	{
 		NextDayCap=capacity[currentDay+1];
+		//statepat is the arraylist of patient currently staying in the hospital
 		for (Patients p:statePat)
 		{
 			if(p.isStayingDay(currentDay+1))
@@ -123,12 +130,14 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{
 
 		PeriodicProblemDay ss = new PeriodicProblemDay();
+		//represent starting state witht eh current day set to 0
 		ss.currentDay = 0;
 		PeriodicProblemDay gs = new PeriodicProblemDay();
+		//represent goal state of the problem with currrentday set to 10
 		gs.currentDay = 10;
 		
 		BlindSearcher bs = new BlindSearcher (ss, gs);
-		
+		//calling createpatient on ss instance this will populat the map
 		ss.createPatients();
 		System.out.print(map);
 		//System.out.print(getALlPatient());
@@ -140,8 +149,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public String toString () 
 	{
 
-
-		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate()+"flagged patient "+nd ;
+		
+		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate() ;
 
 
 
@@ -158,44 +167,57 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	// create new State and copy all patients from previous state and new patient lost
 	// call NextDayCap method 
 	// find code for permutation and combination and test it independently
+	
 
+	//this method create new states or instances of ppd based on current state 
 	public Set<Searchable> makeNewStates() 
 	{
+		//to store new states in states
 		Set<Searchable>  states=  new HashSet<Searchable>();		
+		//arraylist of patients who are my new state patients
 		ArrayList <Patients> newStPat= new ArrayList <Patients> ();
-		ArrayList <Patients> nextDyPat= map.get(currentDay+1);
-	
-		
+		//list of patients staying nex day
+		ArrayList <Patients> nextDyPat= map.get(currentDay+1);	
+		//iterating over statepat which stores information of all the patient based on current state 
 		for (Patients p2 : statePat)
-		{
+		{	//patients are staying next day we are adding them to newstpat
 			if(p2.isStayingDay(currentDay+1))
-
 			{
 				newStPat.add(p2);
 			}
 		}	
-		// this adds state for decision that no new patients will be taken
+		// this adds state for decision that no new patients will be taken on the next day
 		states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
 		if (nextDyPat !=null)
 		{
-			
-			for (Patients p : nextDyPat)
+			int ndc= nextDayCap();			
+			if (ndc>0)				
+			{
+//			List<Integer> iterable=new ArrayList<>();
+//			iterable.add(0);
+//			iterable.add(1);
+//			iterable.add(2);
+//			iterable.add(3);	
+			List<Patients> iterable = nextDyPat;
+			List<List<Patients>> nextDayComb=null;
+			try {
+				nextDayComb = Comb.createCombinations(iterable,ndc);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			for (List<Patients> ndi :nextDayComb)
 			{
 				ArrayList <Patients> allNewPat= new ArrayList <Patients> (newStPat);
-				
-				if (nextDayCap()>0)
-				{
-					allNewPat.add(p);
-					states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));		
-				}	
-				else
-				{
-					nd.add(p);
-				}
+				for (Patients i : ndi )
+			{					
+				allNewPat.add(i);						
+			}
+				states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));				
 				allAceepted.addAll(allNewPat);
 			}
 		}
-			
+		}	
 		
 		return states;
 	}

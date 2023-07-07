@@ -14,12 +14,12 @@ public class Comb
 	}
 
 
-	public static 	List<List<Integer>> createCombinations(List<Integer> iterable, int r) throws Exception 
+	public static 	List<List<Patients>> createCombinations(List<Patients> iterable, int r) throws Exception 
 	{
-		List<List<Integer>>resList = new ArrayList<>();
+		List<List<Patients>>resList = new ArrayList<>();
 		int count =0;
 
-		List<Integer> runList =new ArrayList<>();
+		List<Patients> runList =new ArrayList<>();
 		int n=iterable.size();
 		if (r>n)
 		{
@@ -96,7 +96,7 @@ public class Comb
 		a.add(5);
 		Comb b= new Comb();
 		try {
-			System.out.print( b.createCombinations(a, 3));
+			//System.out.print( b.createCombinations(a, 3));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
