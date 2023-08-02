@@ -1,0 +1,16 @@
+/*********************************************
+ * OPL 12.8.0.0 Data
+ * Author: HP
+ * Creation Date: Feb 18, 2023 at 1:49:55 PM
+ *********************************************/
+NPatients=20;
+Ndays=10;
+
+T=3;
+SheetConnection sheet ("multi-period-resourceV2.xlsx");
+capacity from SheetRead (sheet,"Data!B26:K26");
+x from SheetRead (sheet,"Data!B3:K22");
+AL from SheetRead (sheet,"Data!AL");
+totalpatients to SheetWrite(sheet,"Results!total");
+a to SheetWrite (sheet,"Results!a");
+y to SheetWrite (sheet,"Results!AP");

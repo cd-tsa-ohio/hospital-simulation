@@ -5,13 +5,13 @@
  *********************************************/
 NPatients=20;
 Ndays=10;
-
+NResources=2;
 T=3;
 SheetConnection sheet ("DataFile.xlsx");
-capacity1 from SheetRead (sheet,"Data!B27:K27");
-capacity2 from SheetRead (sheet,"Data!B28:K28");
-ResReq1 from SheetRead (sheet,"Data!M3:M22");
-ResReq2 from SheetRead (sheet,"Data!N3:N22");
+capacity from SheetRead (sheet,"Data!B27:K28");
+
+ResReq from SheetRead (sheet,"Data!M3:N22");
+
 x from SheetRead (sheet,"Data!B3:K22");
 AL from SheetRead (sheet,"Data!L3:L22");
 
