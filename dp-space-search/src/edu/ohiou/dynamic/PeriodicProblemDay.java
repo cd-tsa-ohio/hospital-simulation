@@ -1,21 +1,31 @@
 package edu.ohiou.dynamic;
 
 import java.awt.BorderLayout;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 //import edu.ohiou.dynamic.DPExample1.Example2Panel;
 //import edu.ohiou.dynamic.TestClass.Patients;
@@ -28,7 +38,6 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
 import edu.ohiou.mfgresearch.labimp.table.ModelTable;
 import edu.ohiou.mfgresearch.labimp.table.RectangularTableModel;
 import edu.ohiou.mfgresearch.labimp.table.TableCellGenerator;
-
 
 public class PeriodicProblemDay extends ComparableSpaceState {
 	// parameters
@@ -45,8 +54,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	
 	static int data[][]= {{1,3},{1,2},{2,1},{3,1}};
-
-	static int capacity []= {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
+	
+    static ArrayList <Integer> capacity =new ArrayList<>();
+	//static int capacity []= {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
+	
 	//creating a map of patients objects with key value an integer
 	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
 	static 	{printIndex = true;}
@@ -63,7 +74,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions, int cd)
 	{
 		currentDay = cd;
-		NextDayCap=capacity[cd]; 
+		NextDayCap=capacity.get(cd); 
 		parent = s;
 		this.statePat=decisions;
 		nextDayCap();
@@ -112,7 +123,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	private int nextDayCap()
 
 	{
-		NextDayCap=capacity[currentDay+1];
+		NextDayCap=capacity.get(currentDay+1);
 		//statepat is the arraylist of patient currently staying in the hospital
 		for (Patients p:statePat)
 		{
@@ -125,8 +136,64 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		return NextDayCap;
 		
 	}
-
-	public static void main(String[] args)
+	//excel read
+	public static List<Integer> getCapData ( ) throws IOException
+	{ 
+		FileInputStream fis=new FileInputStream(new File("C:\\Users\\HP\\Documents\\DataFile2.xlsx"));  
+		//creating workbook instance that refers to .xls file  
+		Workbook wb=new XSSFWorkbook(fis);   
+	
+		//List <Object> capacity= new ArrayList <Object>();
+		CellRangeAddress cellRange = CellRangeAddress.valueOf("B27:K27");
+		Sheet sheet= wb.getSheetAt(0);
+		//CellRangeAddress range2= CellRangeAddress.valueOf(range);
+	//	CellWalk cellwalk= new CellWalk (sheet, range2);
+		for (int i = cellRange.getFirstRow(); i<=cellRange.getLastRow();i++)
+		{
+		
+			Row row= sheet.getRow(i);
+			 for (int colNum = cellRange.getFirstColumn(); colNum <= cellRange.getLastColumn(); colNum++) 
+			 {
+	                Cell cell = row.getCell(colNum);
+	                Object cellValue = getValues(cell);
+	                capacity.add((Integer) cellValue);
+	            }
+		}
+		
+			
+	
+		for (Integer i: capacity )
+		{
+			System.out.print(i);
+			System.out.println("\n");
+		}
+		return capacity;
+	}
+	
+public static Integer getValues (Cell cell)
+	
+	{
+		if (cell==null)
+		{
+			return 0;
+		}
+		switch (cell.getCellType())
+		{
+		case  Cell.CELL_TYPE_NUMERIC:			
+			return (int) cell.getNumericCellValue();
+	
+		case Cell.CELL_TYPE_STRING:
+			return Integer.parseInt(cell.getStringCellValue());
+		case  Cell.CELL_TYPE_BLANK:		
+			return 0;
+		default:
+			return 0;
+	
+		}
+		
+		
+	}
+	public static void main(String[] args) 
 	{
 
 		PeriodicProblemDay ss = new PeriodicProblemDay();
@@ -141,8 +208,15 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		ss.createPatients();
 		System.out.print(map);
 		//System.out.print(getALlPatient());
+		try {
+			getCapData();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		bs.setApplet();
-		bs.display("Periodic Problem with the capacity " + Arrays.toString(capacity));
+		bs.display("Periodic Problem with the capacity " + (capacity));
+		
 	}
 
 
@@ -186,24 +260,31 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				newStPat.add(p2);
 			}
 		}	
-		// this adds state for decision that no new patients will be taken on the next day
+		//cpmment out 192, start with i=0 remove if of capacity check
+	//untill here i am adding the existing patietns already into the list of decisons for resulting state 
 		states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
+		//now comes the new patient
 		if (nextDyPat !=null)
 		{
-			int ndc= nextDayCap();			
-			if (ndc>0)				
+			int nextDayCap= nextDayCap();			
+			if (nextDayCap>0)				
 			{
 //			List<Integer> iterable=new ArrayList<>();
 //			iterable.add(0);
 //			iterable.add(1);
 //			iterable.add(2);
 //			iterable.add(3);	
-			List<Patients> iterable = nextDyPat;
-			List<List<Patients>> nextDayComb=null;
-			try {
-				nextDayComb = Comb.createCombinations(iterable,ndc);
+			List<Patients> nxtDyPatIter = nextDyPat;
+			List<List<Patients>> nextDayComb=new ArrayList <>();
+			//so if we have capcity and there a next day patients we create combinations
+			try {	
+				for (int i=1;i<=nextDayCap;i++)
+				{
+				List<List<Patients>> combinations = Comb.createCombinations(nxtDyPatIter, i);
+				nextDayComb.addAll(combinations);
+	                
+				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			for (List<Patients> ndi :nextDayComb)
@@ -214,7 +295,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				allNewPat.add(i);						
 			}
 				states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));				
-				allAceepted.addAll(allNewPat);
+				//allAceepted.addAll(allNewPat);
 			}
 		}
 		}	
@@ -306,9 +387,6 @@ class PDGenerator implements TableCellGenerator {
 	}
 	
 }
-
-
-
 // give name in patient class make variable
 
 }
