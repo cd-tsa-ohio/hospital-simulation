@@ -61,7 +61,7 @@ def periodic_problem(NPatients, Ndays, NResources, Nregions):
     for r in regionsSet:
         for i in days:
 
-            model.addConstr(gp.quicksum(x[r][m][i]*y[r,m] for m in patients)+gp.quicksum(gp.quicksum((x[r2][m][i]*(1-y[r2,m]))*z[r2,r,m] for m in patients) for r2 in regionsSet[r])<=capacity[r][i])
+            model.addConstr(gp.quicksum(x[r][m][i]*y[r,m] for m in patients)+gp.quicksum(gp.quicksum((x[r2][m][i]*(1-y[r2,m]))*z[r,r2,m] for m in patients) for r2 in regionsSet[r])<=capacity[r][i])
 
     # transferred patient of region can only go to one region
     for r in regionsSet:
@@ -72,6 +72,21 @@ def periodic_problem(NPatients, Ndays, NResources, Nregions):
     for r in regionsSet:
 
         model.addConstr(gp.quicksum(y[r,m] for m in patients)>=gp.quicksum( gp.quicksum(z[r2,r,m]for m in patients)for r2 in regionsSet[r] ))
+
+    for r in regionsSet:
+        for m in patients:
+            model.addConstr(z[r,r,m]==0)
+
+    for r in regionsSet:
+        for i in days:
+            for m in patients:
+                model.addConstr(x[r][m][i] >= y[r,m])
+                model.addConstr(x[r][m][i] >=gp.quicksum(z[r2,r,m] for r2 in regionsSet[r]))
+
+    for r in regionsSet:
+        for i in days:
+            for m in patients:
+                model.addConstr(y[r,m] + gp.quicksum(z[r2, r, m] for r2 in regionsSet[r])<=x[r][m][i])
 
 
     # print(remaingCap)
@@ -84,5 +99,7 @@ def periodic_problem(NPatients, Ndays, NResources, Nregions):
         print(f"{var.VarName} = {var.x}")
     for var in z.values():
         print(f"{var.VarName} = {var.x}")
+
+    print(totalPatiens)
 periodic_problem(10, 5, 2, 3)
 
