@@ -2,6 +2,13 @@ import gurobipy as gp
 import openpyxl
 from gurobipy import GRB
 import pandas as pa
+from decouple import config
+
+
+# config solution (DATA_FOLDER) used from
+# https://able.bio/rhett/how-to-set-and-get-environment-variables-in-python--274rgt5
+
+DATA_FOLDER = config('GUR_DATA_FOLDER')
 
 
 workbook2 = openpyxl.load_workbook("DataFile3.xlsx")
