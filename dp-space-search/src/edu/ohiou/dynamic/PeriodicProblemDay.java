@@ -51,27 +51,31 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	//array list of patients
 	
 	
-
+	static String XLSX_FOLDER;
 	
-	static int data[][]= {{1,3},{1,2},{2,1},{3,1}};
+	static int data[][]= {{1,3},{1,2},{2,2},{3,1}};
 	
     static ArrayList <Integer> capacity =new ArrayList<>();
-	//static int capacity []= {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
+	
 	
 	//creating a map of patients objects with key value an integer
-	static  Map  <Integer,ArrayList<Patients>>  map= new HashMap <Integer,ArrayList<Patients>> ();
+	static  Map  <Integer,ArrayList<Patient>>  map= new HashMap <Integer,ArrayList<Patient>> ();
 	static 	{printIndex = true;}
-   static  ArrayList <Patients> nd= new ArrayList <Patients> ();
-   static ArrayList <Patients> allAceepted= new ArrayList <Patients> ();
+   static  ArrayList <Patient> nd= new ArrayList <Patient> ();
+   static ArrayList <Patient> allAceepted= new ArrayList <Patient> ();
  //this holds informaiton about patients
-   ArrayList <Patients> statePat= new ArrayList<Patients>();
+   ArrayList <Patient> statePat= new ArrayList<Patient>();
+   
+   static {
+	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
+   }
 	//constructors 
 	public PeriodicProblemDay()
 	{
 		node = new DefaultMutableTreeNode(this);
 		//statePat=new ArrayList<Patients>();
 	}
-	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patients> decisions, int cd)
+	public PeriodicProblemDay(PeriodicProblemDay s,ArrayList <Patient> decisions, int cd)
 	{
 		currentDay = cd;
 		NextDayCap=capacity.get(cd); 
@@ -101,19 +105,19 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		for (int i=0;i<data.length;i++) 
 		{
 			//retrieving elements from data the 0 index their arrival day, their lenght of stay by 1
-			ArrayList<Patients> pat=map.get(data[i][0]);
+			ArrayList<Patient> pat=map.get(data[i][0]);
 			//if there are no patients on this day in the map
 			if (pat==null)
 			{	
 				//we create a patient with arrival day and los, and put that in the map with the key as arrival day
-				ArrayList<Patients> Npat=new ArrayList<Patients> ();
-				Npat.add(new Patients(data[i][0],data[i][1]));
+				ArrayList<Patient> Npat=new ArrayList<Patient> ();
+				Npat.add(new Patient(data[i][0],data[i][1]));
 				map.put(data[i][0],Npat);
 			}
 			else
 			{	
 				//otherwise we create new patient add this into the existing patients who arrive on that day
-				pat.add(new Patients(data[i][0],data[i][1]));
+				pat.add(new Patient(data[i][0],data[i][1]));
 			}
 
 		}	
@@ -125,7 +129,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{
 		NextDayCap=capacity.get(currentDay+1);
 		//statepat is the arraylist of patient currently staying in the hospital
-		for (Patients p:statePat)
+		for (Patient p:statePat)
 		{
 			if(p.isStayingDay(currentDay+1))
 			{
@@ -139,12 +143,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	//excel read
 	public static List<Integer> getCapData ( ) throws IOException
 	{ 
-		FileInputStream fis=new FileInputStream(new File("C:\\Users\\HP\\Documents\\DataFile2.xlsx"));  
+		FileInputStream fis=new FileInputStream(new File(XLSX_FOLDER + "DataFile2.xlsx"));  
 		//creating workbook instance that refers to .xls file  
 		Workbook wb=new XSSFWorkbook(fis);   
 	
 		//List <Object> capacity= new ArrayList <Object>();
-		CellRangeAddress cellRange = CellRangeAddress.valueOf("B27:K27");
+		CellRangeAddress cellRange = CellRangeAddress.valueOf("B27:G27");
 		Sheet sheet= wb.getSheetAt(0);
 		//CellRangeAddress range2= CellRangeAddress.valueOf(range);
 	//	CellWalk cellwalk= new CellWalk (sheet, range2);
@@ -160,7 +164,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	            }
 		}
 		
-			
+		wb.close();	
 	
 		for (Integer i: capacity )
 		{
@@ -249,11 +253,11 @@ public static Integer getValues (Cell cell)
 		//to store new states in states
 		Set<Searchable>  states=  new HashSet<Searchable>();		
 		//arraylist of patients who are my new state patients
-		ArrayList <Patients> newStPat= new ArrayList <Patients> ();
+		ArrayList <Patient> newStPat= new ArrayList <Patient> ();
 		//list of patients staying nex day
-		ArrayList <Patients> nextDyPat= map.get(currentDay+1);	
+		ArrayList <Patient> nextDyPat= map.get(currentDay+1);	
 		//iterating over statepat which stores information of all the patient based on current state 
-		for (Patients p2 : statePat)
+		for (Patient p2 : statePat)
 		{	//patients are staying next day we are adding them to newstpat
 			if(p2.isStayingDay(currentDay+1))
 			{
@@ -274,23 +278,23 @@ public static Integer getValues (Cell cell)
 //			iterable.add(1);
 //			iterable.add(2);
 //			iterable.add(3);	
-			List<Patients> nxtDyPatIter = nextDyPat;
-			List<List<Patients>> nextDayComb=new ArrayList <>();
+			List<Patient> nxtDyPatIter = nextDyPat;
+			List<List<Patient>> nextDayComb=new ArrayList <>();
 			//so if we have capcity and there a next day patients we create combinations
 			try {	
 				for (int i=1;i<=nextDayCap;i++)
 				{
-				List<List<Patients>> combinations = Comb.createCombinations(nxtDyPatIter, i);
+				List<List<Patient>> combinations = Comb.createCombinations(nxtDyPatIter, i);
 				nextDayComb.addAll(combinations);
 	                
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			for (List<Patients> ndi :nextDayComb)
+			for (List<Patient> ndi :nextDayComb)
 			{
-				ArrayList <Patients> allNewPat= new ArrayList <Patients> (newStPat);
-				for (Patients i : ndi )
+				ArrayList <Patient> allNewPat= new ArrayList <Patient> (newStPat);
+				for (Patient i : ndi )
 			{					
 				allNewPat.add(i);						
 			}
@@ -333,9 +337,9 @@ public static Integer getValues (Cell cell)
 	}
 
 // get all patient method
-	public static ArrayList<Patients> getAllPatient ()
+	public static ArrayList<Patient> getAllPatient ()
 	{
-		ArrayList <Patients>  p= new ArrayList();
+		ArrayList <Patient>  p= new ArrayList();
 		for (int i =1;i<=map.size();i++)
 		{
 			p.addAll( map.get(i));
@@ -353,7 +357,7 @@ class PeriodicDayPanel extends JPanel
 		
 		Object [] ps=getAllPatient().toArray();
 				
-		Object [] days  = {1,2,3,4,5};
+		Object [] days  = {1,2,3};
 		Object [] ps2=statePat.toArray();
 		RectangularTableModel rtm = new RectangularTableModel (ps, days, new PDGenerator());
 		RectangularTableModel rtm2 = new RectangularTableModel (ps2, days, new PDGenerator());
@@ -373,7 +377,7 @@ class PDGenerator implements TableCellGenerator {
 
 	@Override
 	public Object makeTableCell(Object o1, Object o2) {
-		Patients p1 = (Patients) o1;
+		Patient p1 = (Patient) o1;
 		Integer i2 = (Integer) o2;
 		// TODO Auto-generated method stub
 		
@@ -390,13 +394,13 @@ class PDGenerator implements TableCellGenerator {
 // give name in patient class make variable
 
 }
-class Patients
+class Patient
 {
 	int arrivalDay;
 	int los;
 	String name;
 	static int count=0;
-	public Patients(int a, int b) 
+	public Patient(int a, int b) 
 	{
 		count ++;
 		this.name="P"+ count;

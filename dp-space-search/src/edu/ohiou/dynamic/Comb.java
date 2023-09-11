@@ -14,12 +14,12 @@ public class Comb
 	}
 
 
-	public static 	List<List<Patients>> createCombinations(List<Patients> iterable, int r) throws Exception 
+	public static 	List<List<Patient>> createCombinations(List<Patient> iterable, int r) throws Exception 
 	{
-		List<List<Patients>>resList = new ArrayList<>();
+		List<List<Patient>>resList = new ArrayList<>();
 		int count =0;
 
-		List<Patients> runList =new ArrayList<>();
+		List<Patient> runList =new ArrayList<>();
 		int n=iterable.size();
 		if (r>n)
 		{
