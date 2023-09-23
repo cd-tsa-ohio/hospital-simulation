@@ -252,6 +252,8 @@ public static Integer getValues (Cell cell)
 	{
 		//to store new states in states
 		Set<Searchable>  states=  new HashSet<Searchable>();		
+		
+		// dns 092023 test if we are in the last day.
 		//arraylist of patients who are my new state patients
 		ArrayList <Patient> newStPat= new ArrayList <Patient> ();
 		//list of patients staying nex day
@@ -321,7 +323,6 @@ public static Integer getValues (Cell cell)
 	@Override
 	public int[] setSearchTypes() {
 		int [] searchTypes = {BlindSearcher.BREADTH_FIRST,BlindSearcher.DEPTH_FIRST};
-		// TODO Auto-generated method stub
 		return searchTypes;
 	}
 
@@ -358,7 +359,8 @@ class PeriodicDayPanel extends JPanel
 		Object [] ps=getAllPatient().toArray();
 				
 		Object [] days  = {1,2,3};
-		Object [] ps2=statePat.toArray();
+//		Object [] ps2=statePat.toArray();
+		Object [] ps2=allAceepted.toArray();
 		RectangularTableModel rtm = new RectangularTableModel (ps, days, new PDGenerator());
 		RectangularTableModel rtm2 = new RectangularTableModel (ps2, days, new PDGenerator());
     
