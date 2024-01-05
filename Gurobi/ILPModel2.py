@@ -8,7 +8,7 @@ from decouple import config
 #config solution (DATA_FOLDER) used from
 #https://able.bio/rhett/how-to-set-and-get-environment-variables-in-python--274rgt5
 
-DATA_FOLDER = config('GUR_DATA_FOLDER')
+#DATA_FOLDER = config('GUR_DATA_FOLDER')
 
 
 workbook2 = openpyxl.load_workbook("DataFileTest.xlsx")
@@ -49,7 +49,7 @@ def periodic_problem(NPatients, Ndays, NResources, Nregions):
         1: [0,2],
         2: [0,1]
     }
-
+    big_M=1000
     # Decision Variables
     y=model.addVars(regions,patients,lb=0,vtype=GRB.BINARY,name= "OwnRegionPatientTaken" )
 
@@ -59,42 +59,32 @@ def periodic_problem(NPatients, Ndays, NResources, Nregions):
 
 
     # Objective
-    totalPatients=gp.quicksum(gp.quicksum(y[r,m]for m in patients)for r in regionsSet)+gp.quicksum(gp.quicksum(gp.quicksum(z[r,r2,m]for m in patients)for r2 in regionsSet[r])for r in regionsSet)
-
+    totalPatients = gp.quicksum(y)+gp.quicksum(z)
     model.setObjective(totalPatients, GRB.MAXIMIZE)
 
     # Contranints
-    #for every region, patient taken and transffered patient taken should be less than its capacity
     for r in regionsSet:
         for i in days:
- #z is  to from
-            model.addConstr(gp.quicksum(x[r][m][i]*y[r,m] for m in patients)+gp.quicksum(gp.quicksum((x[r2][m][i]*(1-y[r2,m]))*z[r,r2,m] for m in patients) for r2 in regionsSet[r])<=capacity[r][i])
-
-    # transferred patient of region can only go to one region
-    #patient transferred from to
+            model.addConstr(
+                gp.quicksum(y[r, m]*x[r][m][i] for m in patients) +
+                gp.quicksum(gp.quicksum(z[r, r2, m] *x[r2][m][i] for r2 in regionsSet [r]) for m in patients)
+                <= capacity[r][i])
     for r in regionsSet:
-        for i in days:
-            for m in patients:
-                model.addConstr(gp.quicksum(z[r2,r,m] for r2 in regionsSet[r] )<=1)
-        #ownpatients taken should not be less than the transferredpatient taken
-    # for r in regionsSet:
-    #
-    #     model.addConstr(gp.quicksum(y[r,m] for m in patients)>=gp.quicksum( gp.quicksum(z[r,r2,m]for m in patients)for r2 in regionsSet[r] ))
-
+        for m in patients:
+            model.addConstr(gp.quicksum(z[r2,r,m] for r2 in regionsSet[r] )<=1)
     for r in regionsSet:
         for m in patients:
             model.addConstr(z[r,r,m]==0)
+    for r in regionsSet:
+        for m in patients:
+            # Constraint: If x[r][m][i] = 1 for any i, then y[r, m] must be 1
+            model.addConstr(y[r, m] <= gp.quicksum(x[r][m][i] for i in days))
+            model.addConstr(gp.quicksum(z[r2, r, m] for r2 in regionsSet[r])+y[r,m]<=1)
+            model.addConstr(gp.quicksum(z[r2, r, m] for r2 in regionsSet[r])<=gp.quicksum(x[r][m][i] for i in days))
 
-    for r in regionsSet:
-        for i in days:
-            for m in patients:
-                model.addConstr(x[r][m][i] >= y[r,m])
-                model.addConstr(x[r][m][i] >=gp.quicksum(z[r2,r,m] for r2 in regionsSet[r]))
+
 #either you can transfer or accept the same patient you cant transfer the accepted patient
-    for r in regionsSet:
-        for i in days:
-            for m in patients:
-                model.addConstr(y[r,m] + gp.quicksum(z[r2, r, m] for r2 in regionsSet[r])<=x[r][m][i])
+
 
 
     # print(remaingCap)
