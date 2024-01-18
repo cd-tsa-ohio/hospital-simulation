@@ -17,6 +17,8 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -26,6 +28,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 //import edu.ohiou.dynamic.DPExample1.Example2Panel;
 //import edu.ohiou.dynamic.TestClass.Patients;
@@ -359,16 +363,34 @@ class PeriodicDayPanel extends JPanel
 		Object [] ps=getAllPatient().toArray();
 				
 		Object [] days  = {1,2,3};
-//		Object [] ps2=statePat.toArray();
-		Object [] ps2=allAceepted.toArray();
-		RectangularTableModel rtm = new RectangularTableModel (ps, days, new PDGenerator());
-		RectangularTableModel rtm2 = new RectangularTableModel (ps2, days, new PDGenerator());
+		Object [] ps2=statePat.toArray();
+//		Object [] ps2=allAceepted.toArray();
+		RectangularTableModel problemTM = new RectangularTableModel (ps, days, new PDGenerator());
+		RectangularTableModel stateTM = new RectangularTableModel (ps2, days, new PDGenerator());
     
-	ModelTable mt = new ModelTable(rtm);
-	ModelTable mt2 = new ModelTable(rtm2);
-	this.add(new JScrollPane(mt), BorderLayout.CENTER);
-	this.add(new JScrollPane(mt2),BorderLayout.NORTH);
-	//this.add(new JLabel(statePat.toString()),BorderLayout.SOUTH);
+		ModelTable problemTable = new ModelTable(problemTM);
+		ModelTable stateTable = new ModelTable(stateTM);
+	//	this.add(new JScrollPane(mt), BorderLayout.CENTER);
+	//	this.add(new JScrollPane(mt2),BorderLayout.NORTH);
+		//this.add(new JLabel(statePat.toString()),BorderLayout.SOUTH);
+		boolean  useSplitPane = false;
+		if (useSplitPane) {
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				new JScrollPane(problemTable), new JScrollPane(stateTable));
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setDividerLocation(150);
+		
+		this.add(splitPane);
+		}
+		else {
+			JTabbedPane tabbedPane = new JTabbedPane();
+			tabbedPane.addTab("Problem table", null, new JScrollPane(problemTable),
+	                  "Display initial problem table, where checkmarks show when patients need resources");
+			tabbedPane.addTab("State table", null, new JScrollPane(stateTable),
+	                  "Display selected state table, where rows show currently selected patients in the state" 
+	                		  + "<br>nand checkmarks show when selected patients need resources"); 
+			this.add(new JScrollPane(tabbedPane));
+		}
 	}
 	
 	
