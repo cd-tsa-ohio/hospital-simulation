@@ -388,7 +388,7 @@ class PeriodicDayPanel extends JPanel
 	                  "Display initial problem table, where checkmarks show when patients need resources");
 			tabbedPane.addTab("State table", null, new JScrollPane(stateTable),
 	                  "Display selected state table, where rows show currently selected patients in the state" 
-	                		  + "<br>nand checkmarks show when selected patients need resources"); 
+	                		  + "and checkmarks show when selected patients need resources"); 
 			this.add(new JScrollPane(tabbedPane));
 		}
 	}
