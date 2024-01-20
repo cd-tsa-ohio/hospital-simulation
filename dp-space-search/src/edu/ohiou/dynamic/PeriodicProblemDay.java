@@ -31,6 +31,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import edu.ohiou.mfgresearch.labimp.basis.ViewObject;
+
 //import edu.ohiou.dynamic.DPExample1.Example2Panel;
 //import edu.ohiou.dynamic.TestClass.Patients;
 
@@ -65,7 +67,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
  //this holds informaiton about patients
    ArrayList <Patient> statePat= new ArrayList<Patient>();  
    static {
-	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
+//	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
    }
 	//constructors 
 	public PeriodicProblemDay()
@@ -159,8 +161,11 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	}
 	//excel read
 	public static List<Integer> getCapData ( ) throws IOException
+	
 	{ 
-		FileInputStream fis=new FileInputStream(new File(XLSX_FOLDER + "DataFile2.xlsx"));  
+		File excelFile = ViewObject.chooseFile("XLSX", "Excel", "Choose the file with the example data ");
+//		new File(XLSX_FOLDER + "DataFile2.xlsx")
+		FileInputStream fis=new FileInputStream(excelFile);  
 		Workbook wb=new XSSFWorkbook(fis);   
 		CellRangeAddress cellRange = CellRangeAddress.valueOf("B27:G27");
 		Sheet sheet= wb.getSheetAt(0);
