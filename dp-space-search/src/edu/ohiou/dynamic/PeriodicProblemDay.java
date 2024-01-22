@@ -142,11 +142,11 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	private int nextDayCap()
 
 	{
-		if (currentDay+1>=capacity.size())
+		if (currentDay>=capacity.size())
 				{
 			return 0;
 				}
-		NextDayCap=capacity.get(currentDay+1);
+		NextDayCap=capacity.get(currentDay);
 		//statepat is the arraylist of patient currently staying in the hospital
 		for (Patient p:statePat)
 		{
@@ -167,7 +167,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //		new File(XLSX_FOLDER + "DataFile2.xlsx")
 		FileInputStream fis=new FileInputStream(excelFile);  
 		Workbook wb=new XSSFWorkbook(fis);   
-		CellRangeAddress cellRange = CellRangeAddress.valueOf("B27:G27");
+		CellRangeAddress cellRange = CellRangeAddress.valueOf("B27:d27");
 		Sheet sheet= wb.getSheetAt(0);
 		for (int i = cellRange.getFirstRow(); i<=cellRange.getLastRow();i++)
 		{
@@ -263,7 +263,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//to store new states in states
 		Set<Searchable>  states=  new HashSet<Searchable>();	
 		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );
-		if (this.currentDay==capacity.size()-1)
+		if (this.currentDay==capacity.size())
 		{
 			
 			return states;
