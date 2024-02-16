@@ -8,6 +8,7 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import edu.ohiou.mfgresearch.labimp.basis.ViewObject;
 
 import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
+import edu.ohiou.mfgresearch.labimp.spacesearch.DefaultSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
@@ -114,6 +116,16 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	
 	public boolean isSearchComplete(SpaceSearcher ss) {
 		return false;
+	}
+	
+	public boolean isBetterThan(Searchable inState) {
+		DefaultSpaceState other = (DefaultSpaceState) inState;
+		return this.evaluate() > other.evaluate();
+		
+	}
+	
+	public Comparator getComparator() {
+		return new PDComparator();
 	}
 
 	//this need to be static
@@ -264,14 +276,20 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public static void main(String[] args) 
 	{
 
-		PeriodicProblemDay ss = new PeriodicProblemDay();
+		PeriodicProblemDay is = new PeriodicProblemDay();
 		//represent starting state witht eh current day set to 0
-		ss.currentDay = 0;
+		is.currentDay = 0;
 		PeriodicProblemDay gs = new PeriodicProblemDay();
 		//represent goal state of the problem with currrentday set to 10
 		gs.currentDay = 6;
-		
-		BlindSearcher bs = new BlindSearcher (ss, gs);
+		SpaceSearcher ss = null;
+		String searchString = "BLIND";
+		if (searchString .equalsIgnoreCase("BLIND")) {
+			ss = new BlindSearcher (is, gs);
+		}
+		else {
+			ss = new InformedSearcher (is, gs);
+		}	
 		//calling createpatient on ss instance this will populat the map
 		
 		//System.out.print(map);
@@ -282,9 +300,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ss.createPatients();
-		bs.setApplet();
-		bs.display("Periodic Problem with the capacity " + (capacity));
+		is.createPatients();
+		ss.setApplet();
+		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
 		
 	}
 
@@ -460,6 +478,11 @@ class PeriodicDayPanel extends JPanel
 	}
 //implement a static method getallPatients and in panel i call the method
 
+
+// give name in patient class make variable
+
+}
+
 class PDGenerator implements TableCellGenerator {
 
 	@Override
@@ -478,9 +501,23 @@ class PDGenerator implements TableCellGenerator {
 	}
 	
 }
-// give name in patient class make variable
 
+class PDComparator implements Comparator {
+
+	public int compare(Object o1, Object o2) {
+		if (((Searchable)o1).equals((Searchable)o2))
+			return 0;
+		PeriodicProblemDay pd1 = (PeriodicProblemDay) o1;
+		PeriodicProblemDay pd2 = (PeriodicProblemDay) o2;
+		if (pd1.evaluate() <= pd2.evaluate()) {
+		        
+			return -1; }
+		else
+		{	return 1; }
+	}
+	
 }
+
 class Patient
 {
 	int arrivalDay;
