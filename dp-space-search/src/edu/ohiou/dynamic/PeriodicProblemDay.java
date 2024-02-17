@@ -109,9 +109,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//patient with max day of the stay 	
 	public boolean canBeGoal() {
 		
-		currentDay=capacity.size();
+		return currentDay==capacity.size();
 
-		return true;
+
 	}
 	
 	public boolean isSearchComplete(SpaceSearcher ss) {
@@ -283,7 +283,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//represent goal state of the problem with currrentday set to 10
 		gs.currentDay = 6;
 		SpaceSearcher ss = null;
-		String searchString = "BLIND";
+		String searchString = "BL";
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
 		}
@@ -301,8 +301,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			e.printStackTrace();
 		}
 		is.createPatients();
-		ss.setApplet();
-		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
+//		ss.setApplet();
+//		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
+		ss.runOptSpaceSearch();
 		
 	}
 
