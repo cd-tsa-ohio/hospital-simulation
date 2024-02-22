@@ -444,18 +444,18 @@ class PeriodicDayPanel extends JPanel
 	public PeriodicDayPanel () {
 		ArrayList  p= new ArrayList  ();
 		
-		Object [] ps=getAllPatient().toArray();
+		Object [] allPat=getAllPatient().toArray();
 				
 		Object [] days  = {1,2,3,4,5,6};
-		Object [] ps2=statePat.toArray();
+		Object [] statePat=combinedSet.toArray();
 
 //		Object [] ps2=allAceepted.toArray();
-		RectangularTableModel problemTM = new RectangularTableModel (ps, days, new PDGenerator());
-		RectangularTableModel stateTM = new RectangularTableModel (ps2, days, new PDGenerator());
+		RectangularTableModel problemTM = new RectangularTableModel (allPat, days, new PDGenerator());
+		RectangularTableModel stateTM = new RectangularTableModel (statePat, days, new PDGenerator());
 
 	//	Object [] ps2=allAceepted.toArray();
-		RectangularTableModel rtm = new RectangularTableModel (ps, days, new PDGenerator());
-		RectangularTableModel rtm2 = new RectangularTableModel (ps2, days, new PDGenerator());
+		RectangularTableModel rtm = new RectangularTableModel (allPat, days, new PDGenerator());
+		RectangularTableModel rtm2 = new RectangularTableModel (statePat, days, new PDGenerator());
 
 		ModelTable problemTable = new ModelTable(problemTM);
 		ModelTable stateTable = new ModelTable(stateTM);
@@ -472,10 +472,13 @@ class PeriodicDayPanel extends JPanel
 			JTabbedPane tabbedPane = new JTabbedPane();
 			tabbedPane.addTab("Problem table", null, new JScrollPane(problemTable),
 	                  "Display initial problem table, where checkmarks show when patients need resources");
-			tabbedPane.addTab("State table", null, new JScrollPane(stateTable),
+			JScrollPane stateScroll = new JScrollPane(stateTable);
+			
+			tabbedPane.addTab("State table", null, stateScroll,
 	                  "Display selected state table, where rows show currently selected patients in the state" 
 	                		  + "and checkmarks show when selected patients need resources"); 
 			this.add(new JScrollPane(tabbedPane));
+			stateScroll.setVisible(true);
 		}
 	}
 	
