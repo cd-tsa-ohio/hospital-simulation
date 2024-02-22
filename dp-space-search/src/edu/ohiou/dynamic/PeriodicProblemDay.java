@@ -303,7 +303,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		is.createPatients();
 //		ss.setApplet();
 //		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
+		
 		ss.runOptSpaceSearch();
+		ss.setApplet();
+		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
 		
 	}
 
