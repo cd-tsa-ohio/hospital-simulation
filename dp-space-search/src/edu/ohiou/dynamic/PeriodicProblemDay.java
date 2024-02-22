@@ -108,16 +108,18 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	//Ways:size of the capacity is the day data()
 		//patient with max day of the stay 	
 	public boolean canBeGoal() {
-		
+		//boolean allPatientsExplored=statePat.isEmpty();
 		return currentDay==capacity.size();
+		
+		
 
 
 	}
 	
 	public boolean isSearchComplete(SpaceSearcher ss) {
-		return false;
+		boolean lastDay=ss.getOpen().isEmpty();
+		return canBeGoal()&&lastDay;
 	}
-	
 	public boolean isBetterThan(Searchable inState) {
 		DefaultSpaceState other = (DefaultSpaceState) inState;
 		return this.evaluate() > other.evaluate();
@@ -301,9 +303,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			e.printStackTrace();
 		}
 		is.createPatients();
-//		ss.setApplet();
-//		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
-		ss.runOptSpaceSearch();
+		ss.setApplet();
+		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
+		//ss.runOptSpaceSearch();
 		
 	}
 
