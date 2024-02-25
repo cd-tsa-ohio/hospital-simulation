@@ -472,13 +472,13 @@ class PeriodicDayPanel extends JPanel
 			JTabbedPane tabbedPane = new JTabbedPane();
 			tabbedPane.addTab("Problem table", null, new JScrollPane(problemTable),
 	                  "Display initial problem table, where checkmarks show when patients need resources");
-			JScrollPane stateScroll = new JScrollPane(stateTable);
+			JScrollPane stateScrollPane = new JScrollPane(stateTable);
 			
-			tabbedPane.addTab("State table", null, stateScroll,
+			tabbedPane.addTab("State table", null, stateScrollPane,
 	                  "Display selected state table, where rows show currently selected patients in the state" 
 	                		  + "and checkmarks show when selected patients need resources"); 
 			this.add(new JScrollPane(tabbedPane));
-			stateScroll.setVisible(true);
+			tabbedPane.setSelectedComponent(stateScrollPane);
 		}
 	}
 	
