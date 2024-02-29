@@ -429,10 +429,11 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public static ArrayList<Patient> getAllPatient ()
 	{
 		ArrayList <Patient>  p= new ArrayList();
-		for (int i =1;i<=map.size();i++)
+		for (Map.Entry<Integer,ArrayList<Patient>>entry : map.entrySet())
 		{
-			p.addAll( map.get(i));
-		
+		{			
+			p.addAll(entry.getValue());	
+		}
 		}
 	 return p;
 	}
@@ -446,7 +447,7 @@ class PeriodicDayPanel extends JPanel
 		
 		Object [] allPat=getAllPatient().toArray();
 				
-		Object [] days  = {1,2,3,4,5,6};
+		Object [] days  = {1,2,3,4,5,6,7,8,9,10};
 		Object [] statePat=combinedSet.toArray();
 
 //		Object [] ps2=allAceepted.toArray();
