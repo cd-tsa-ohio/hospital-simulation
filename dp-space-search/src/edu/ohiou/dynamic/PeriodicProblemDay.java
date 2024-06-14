@@ -306,8 +306,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 		ss.setApplet();
 		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
-		//ss.runOptSpaceSearch();
-
+//		ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
+//		ss.runOptSpaceSearch(3);
+//
 		
 	}
 
@@ -410,7 +411,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	@Override
 	public int[] setSearchTypes() {
-		int [] searchTypes = {BlindSearcher.BREADTH_FIRST,BlindSearcher.DEPTH_FIRST};
+		int [] searchTypes = {BlindSearcher.BREADTH_FIRST,BlindSearcher.DEPTH_FIRST, SpaceSearcher.BEST_FIRST, SpaceSearcher.ASTARALGORITHM};
 		return searchTypes;
 	}
 
@@ -446,7 +447,7 @@ class PeriodicDayPanel extends JPanel
 		ArrayList  p= new ArrayList  ();
 		
 		Object [] allPat=getAllPatient().toArray();
-				
+	// sormaz: Mandvi we should create this array from data 			
 		Object [] days  = {1,2,3,4,5,6,7,8,9,10};
 		Object [] statePat=combinedSet.toArray();
 
@@ -518,7 +519,7 @@ class PDComparator implements Comparator {
 			return 0;
 		PeriodicProblemDay pd1 = (PeriodicProblemDay) o1;
 		PeriodicProblemDay pd2 = (PeriodicProblemDay) o2;
-		if (pd1.evaluate() <= pd2.evaluate()) {
+		if (pd1.evaluate() > pd2.evaluate()) {
 		        
 			return -1; }
 		else
