@@ -4,9 +4,9 @@ from gurobipy import GRB
 from decouple import config
 import pandas as pd
 
-
+#this is model 1
 #this is one resource one region model
-#this model is verified to read from data folder (orginal model was ProposalModel)
+#this model is modified to read from data folder (orginal model was ProposalModel)
 #the model is also further modified to read from dataframe
 DATA_FOLDER = config('GUR_DATA_FOLDER')
 sheetname=input("write file name: ")
@@ -25,11 +25,12 @@ for values in range (1,blank_line_index+1):
     x.append(patientData)
 print (x)
 model=gp.Model("OptimsationModel")
-patients=range(1,len(x))
+patients=range(0,len(x))
 days=range(1,numDays)
 
 #Variables
 y= model.addVars(patients,vtype=GRB.BINARY,name='y')
+
 z=model.addVars(patients,days,vtype=GRB.INTEGER,lb=0,name="z")
 
 #Objective
@@ -38,7 +39,7 @@ model.setObjective(totalPatiens,GRB.MAXIMIZE)
 
 #Contranints
 for i in days:
-     model.addConstr(gp.quicksum(z[m,i] for m in patients)<= capacity[i],f"capcity_{i}")
+     model.addConstr(gp.quicksum(z[m,i] for m in patients)<= capacity[i],f"capacity_{i}")
 for i in days:
     for m in patients:
         model.addConstr(z[m,i]==x[m][i]*y[m], f"z_{m}_{i}")
