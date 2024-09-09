@@ -11,7 +11,7 @@ from decouple import config
 DATA_FOLDER = config('GUR_DATA_FOLDER')
 
 
-workbook2 = openpyxl.load_workbook("DataFile3.xlsx")
+workbook2 = openpyxl.load_workbook(DATA_FOLDER + "DataFile3.xlsx")
 sheets=["Region1","Region2","Region3"]
 def getData():
     capacity=[]
