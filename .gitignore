@@ -216,6 +216,8 @@ cplex/.metadata/
 cplex/.metadata/*/*.js
 cplex/.metadata/*/*.xml
 Gurobi/.env
+Gurobi/.idea/*/*.*
+Gurobi/.idea/*.*
 
 #Eclipse proejct files
 .metadata/
