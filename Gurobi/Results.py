@@ -5,7 +5,7 @@ from decouple import config
 import tkinter as tk
 from tkinter import filedialog
 
-def readresults(y:dict,z:dict,file_path):
+def writeResults(y:dict, z:dict, file_path):
     # root = tk.Tk()
     # root.withdraw()
     # DATA_FOLDER = config('GUR_DATA_FOLDER')

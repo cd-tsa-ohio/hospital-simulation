@@ -1,11 +1,11 @@
 import gurobipy as gp
 from gurobipy import GRB
 import GetData
-
+from Results import writeResults
 
 #Adding multiple resource Constraint Latest after 9/20
 model = gp.Model("OptimsationModel")
-x, capacity,capacity2, resource1list,resource2list= GetData.getData()
+x, capacity,capacity2, resource1list,resource2list,file_path= GetData.getData(GetData.getFile())
 totalCaplist=[]
 totalCaplist.extend([capacity,capacity2])
 totalResourcelist=[]
@@ -20,25 +20,27 @@ for region in range(len(x)):  # Iterate over regions (outer list)
     for Otherregion in range(len(x)) :
         if Otherregion !=region:
             for OtherRegionpatient in range(len(x[Otherregion])):
-                z[region,Otherregion,OtherRegionpatient]=model.addVar(vtype=GRB.BINARY, name=f"otherRegionPatientTaken To {region} from_{Otherregion} patientnumber_{OtherRegionpatient}")
+                z[region,Otherregion,OtherRegionpatient]=model.addVar(vtype=GRB.BINARY, name=f" from {Otherregion} to {region} patientnumber_{OtherRegionpatient}")
 
 # Objective
-totalPatients = gp.quicksum(var for var in y.values())+gp.quicksum(var for var in z.values())
+weightY=1.0001
+totalPatients = (gp.quicksum((weightY * var) for var in y.values())) + gp.quicksum(1 * var for var in z.values())
 model.setObjective(totalPatients, GRB.MAXIMIZE)
 #Constraints
 #Constraint 1 : Patient coming from own region and patient taken from other region should be less than the capacity
 for r in range(len(x)):  # Iterate over regions
       # Iterate over patients,
-        for i in range(1, len(capacity[r])):#Iterate over days
-            for re in range (1,len(totalCaplist)):
-                model.addConstr(gp.quicksum(y[r, m] * x[r][m][i]*totalResourcelist[re][r][m]for m in range(len(x[r])))
-                +gp.quicksum(gp.quicksum(z[r, r2, m2] * x[r2][m2][i] *totalResourcelist[re][r2][m2]for m2 in range(len(x[r2])) ) for r2 in range(len(x))if r2!=r)
-                    <= totalCaplist[re][r][i])
+        for i in range(1, len(capacity[r])+1):#Iterate over days
+            for re in range (0,len(totalCaplist)):
+                ownregion=gp.quicksum(y[r, m] * x[r][m][i]*totalResourcelist[re][r][m]for m in range(len(x[r])))
+                otherregion=gp.quicksum(gp.quicksum(z[r, r2, m2] * x[r2][m2][i] *totalResourcelist[re][r2][m2]for m2 in range(len(x[r2])) ) for r2 in range(len(x))if r2!=r)
+                model.addConstr(ownregion+otherregion <= totalCaplist[re][r][i])
+
 #constraint 2:
 #ensuring patient transferred go to one region so we iterating over from region and from patients , and then in the end summinng over to regions
 for r2 in range(len(x)):
     for m2 in range(len(x[r2])):
-        for i in range(1, len(capacity[r2])):#gettting days
+        for i in range(1, len(capacity[r2])+1):#gettting days
                 model.addConstr(gp.quicksum(z[r,r2,m2]  for r in range(len(x))if r2!=r) <=1)
 for r2 in range(len(x)):
         for m in range(len(x[r2])):
@@ -49,7 +51,9 @@ model.update()
 model.optimize()
 
 print("\nPatient Assignments:")
+
 for var in y.values():
     print(f"{var.VarName} = {var.x}")
 for var in z.values():
     print(f"{var.VarName} = {var.x}")
+writeResults(y, z, file_path)

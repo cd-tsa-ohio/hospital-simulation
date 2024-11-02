@@ -2,7 +2,7 @@ import gurobipy as gp
 from gurobipy import GRB
 import GetData
 import math
-from Results import readresults
+from Results import writeResults
 
 #Adding multiple resource Constraint Latest after 9/20
 #Parameters
@@ -12,9 +12,11 @@ totalCaplist=[]
 totalCaplist.extend([capacity,capacity2])
 totalResourcelist=[]
 totalResourcelist.extend([resource1list,resource2list])
+#input parameter
 totalCapacity=3
 periods=3
-periodlength=3
+#input parameter
+periodlength=4
 #Decision Variables
 y = {}
 cap={}
