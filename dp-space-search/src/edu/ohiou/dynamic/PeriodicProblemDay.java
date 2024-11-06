@@ -68,7 +68,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
   Set<Patient> combinedSet = new HashSet<>();
   
    static {
-	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
+//	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
    }
 	//constructors 
 	public PeriodicProblemDay()
