@@ -37,6 +37,8 @@ import edu.ohiou.mfgresearch.labimp.basis.ViewObject;
 import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.DefaultSpaceState;
+import edu.ohiou.mfgresearch.labimp.spacesearch.HeuristicException;
+import edu.ohiou.mfgresearch.labimp.spacesearch.HeuristicFunction;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
@@ -48,9 +50,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	// parameters
 
 	int NextDayCap;
-	int PatientTaken;
+//	int PatientTaken;
 	int currentDay;
-	int EvaluatePatients;
+	//int EvaluatePatients;
 	// need to have decision day instead of decisions
 	//variable for free capacity
 	//array list of patients	
@@ -66,7 +68,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
  //this holds informaiton about patients
    ArrayList <Patient> statePat= new ArrayList<Patient>();  
   Set<Patient> combinedSet = new HashSet<>();
-  
+  static String currentHeuristic="";
+  double maxpatientnumber;
    static {
 	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
    }
@@ -123,6 +126,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	}
 
 	//this need to be static
+	
 	public void  createPatients ()
 	{
 		for (int i=0;i<data.size();i++) 
@@ -262,6 +266,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//gs.currentDay = 6;
 		SpaceSearcher ss = null;
 		String searchString = "BL";
+		
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
 		}
@@ -373,7 +378,18 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{		
 		return combinedSet.size();
 	}
-	
+//	  public void calculateMinDistToGoal() {
+//		    HeuristicFunction heuristic;
+//		    try {
+//		      if (this.currentHeuristic.equalsIgnoreCase(""))
+//		    	  heuristic = getHeuristic();
+//		      else 
+//		          heuristic = getHeuristic(this.currentHeuristic);
+//		      maxpatientnumber= heuristic.evaluate();
+//		    } catch (HeuristicException e) {
+//		    	maxpatientnumber = Double.NaN;
+//		    }
+//		      }
 	public void init () 
 	{		
 			panel = new PeriodicDayPanel ();
@@ -397,10 +413,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	
 class PeriodicDayPanel extends JPanel 
 {
-	public PeriodicDayPanel () {
+	public PeriodicDayPanel () 
+	{
 		Object [] allPat=getAllPatient().toArray();
-	// sormaz: Mandvi we should create this array from data 	
-		//Object [] days= {1,2,3,4,5,6,7,8,9,10};
 		ArrayList <Integer>  daysList= new ArrayList();
 		for(int i=1;i<=capacity.size();i++) {
 			daysList.add(i);
@@ -409,18 +424,18 @@ class PeriodicDayPanel extends JPanel
 		Object [] statePat=combinedSet.toArray();
 		RectangularTableModel problemTM = new RectangularTableModel (allPat, days, new PDGenerator());
 		RectangularTableModel stateTM = new RectangularTableModel (statePat, days, new PDGenerator());
-		RectangularTableModel rtm = new RectangularTableModel (allPat, days, new PDGenerator());
-		RectangularTableModel rtm2 = new RectangularTableModel (statePat, days, new PDGenerator());
 		ModelTable problemTable = new ModelTable(problemTM);
 		ModelTable stateTable = new ModelTable(stateTM);
 		boolean  useSplitPane = false;
+		setLayout(new BorderLayout());
 		if (useSplitPane) {
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				new JScrollPane(problemTable), new JScrollPane(stateTable));
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(150);
-		
-		this.add(splitPane);
+	
+		this.add(splitPane,BorderLayout.CENTER);
+
 		}
 		else {
 			JTabbedPane tabbedPane = new JTabbedPane();
@@ -431,13 +446,17 @@ class PeriodicDayPanel extends JPanel
 			tabbedPane.addTab("State table", null, stateScrollPane,
 	                  "Display selected state table, where rows show currently selected patients in the state" 
 	                		  + "and checkmarks show when selected patients need resources"); 
-			this.add(new JScrollPane(tabbedPane));
+			this.add(new JScrollPane(tabbedPane),BorderLayout.CENTER);
 			tabbedPane.setSelectedComponent(stateScrollPane);
+			try {
+				this.add(new JLabel(getHeuristic().getClass().getName()),BorderLayout.SOUTH);
+			} catch (HeuristicException e) {
+				// TODO Auto-generated catch block
+				this.add(new JLabel("Heruistic not defined"),BorderLayout.SOUTH);
+			}
 		}
-	}
-	
-	
-	}
+	}	
+}
 //implement a static method getallPatients and in panel i call the method
 
 
