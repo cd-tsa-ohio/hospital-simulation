@@ -1,7 +1,8 @@
 package edu.ohiou.dynamic;
 
 import java.awt.BorderLayout;
-
+import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.apache.poi.ss.usermodel.*;
 
@@ -71,7 +73,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
   static String currentHeuristic="";
   double maxpatientnumber;
    static {
-	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
+//	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
    }
 	//constructors 
 	public PeriodicProblemDay()
@@ -411,6 +413,26 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	
 //classes	
 	
+	class PDCellRenderer extends DefaultTableCellRenderer  {
+		
+		 public Component getTableCellRendererComponent(
+                JTable table, Object color,
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
+			 
+			 Component component = super.getTableCellRendererComponent
+			 	(table, color, isSelected, hasFocus, row, column);
+			 component.setBackground(Color.cyan);
+//			 if (isOnVisitedPath(row+1, column)) {
+//				 component.setBackground(Color.yellow);
+//			 }
+//			 else {
+//				 component.setBackground (Color.white);
+//			 }
+			 return component;
+		 }
+	}
+	
 class PeriodicDayPanel extends JPanel 
 {
 	public PeriodicDayPanel () 
@@ -425,6 +447,7 @@ class PeriodicDayPanel extends JPanel
 		RectangularTableModel problemTM = new RectangularTableModel (allPat, days, new PDGenerator());
 		RectangularTableModel stateTM = new RectangularTableModel (statePat, days, new PDGenerator());
 		ModelTable problemTable = new ModelTable(problemTM);
+		problemTable.setDefaultRenderer(Boolean.class, new PDCellRenderer());
 		ModelTable stateTable = new ModelTable(stateTM);
 		boolean  useSplitPane = false;
 		setLayout(new BorderLayout());

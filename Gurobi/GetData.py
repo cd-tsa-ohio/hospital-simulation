@@ -1,13 +1,12 @@
+# add header here
+# 
 from decouple import config
 import pandas as pd
 import tkinter as tk
+import ou_file_utils as ofu
 from tkinter import filedialog
-def getFile():
-    root = tk.Tk()
-    root.withdraw()
-    DATA_FOLDER = config('GUR_DATA_FOLDER')
-    file_path = filedialog.askopenfilename(initialdir=DATA_FOLDER)
-    return file_path
+
+
 def getData(file_path):
     df1 = pd.read_excel(file_path, sheet_name=None)
     capacitylist1=[]
@@ -42,4 +41,6 @@ def getData(file_path):
     else:
         return patientData2,capacitylist1,capacitylist2,resource1list,resource2list,file_path
 if __name__ == "__main__":
-    getData()
+    gd = getData(ofu.getFile())
+    print (type(gd))
+    print(gd)

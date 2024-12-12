@@ -218,6 +218,7 @@ cplex/.metadata/*/*.xml
 Gurobi/.env
 Gurobi/.idea/*/*.*
 Gurobi/.idea/*.*
+Gurobi/__pycache__/*.*
 
-#Eclipse proejct files
+#Eclipse project files
 .metadata/
