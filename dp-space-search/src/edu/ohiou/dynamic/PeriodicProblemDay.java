@@ -378,7 +378,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	@Override
 	public double evaluate() 
 	{		
-		return combinedSet.size();
+		return - combinedSet.size();
 	}
 //	  public void calculateMinDistToGoal() {
 //		    HeuristicFunction heuristic;
@@ -447,7 +447,8 @@ class PeriodicDayPanel extends JPanel
 		RectangularTableModel problemTM = new RectangularTableModel (allPat, days, new PDGenerator());
 		RectangularTableModel stateTM = new RectangularTableModel (statePat, days, new PDGenerator());
 		ModelTable problemTable = new ModelTable(problemTM);
-		problemTable.setDefaultRenderer(Boolean.class, new PDCellRenderer());
+		problemTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
+		problemTable.setDefaultRenderer(String.class, new PDCellRenderer());
 		ModelTable stateTable = new ModelTable(stateTM);
 		boolean  useSplitPane = false;
 		setLayout(new BorderLayout());
@@ -495,7 +496,7 @@ class PDGenerator implements TableCellGenerator {
 		Integer i2 = (Integer) o2;
 		// TODO Auto-generated method stub
 		
-		return  p1.isStayingDay(i2);
+		return  p1.isStayingDay(i2) ? 1:" ";
 	}
 
 	@Override
