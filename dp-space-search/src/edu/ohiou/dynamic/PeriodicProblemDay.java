@@ -416,13 +416,25 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	class PDCellRenderer extends DefaultTableCellRenderer  {
 		
 		 public Component getTableCellRendererComponent(
-                JTable table, Object color,
+                JTable table, Object value,
                 boolean isSelected, boolean hasFocus,
                 int row, int column) {
 			 
 			 Component component = super.getTableCellRendererComponent
-			 	(table, color, isSelected, hasFocus, row, column);
-			 component.setBackground(Color.cyan);
+			 	(table, value, isSelected, hasFocus, row, column);
+			 int number = 0;
+			try {
+				number = (Integer) value;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+			}
+			 if ( number == 1) { 
+				 component.setBackground(Color.yellow);
+			 }
+			 else {
+				 component.setBackground(Color.white);
+			 }
 //			 if (isOnVisitedPath(row+1, column)) {
 //				 component.setBackground(Color.yellow);
 //			 }
