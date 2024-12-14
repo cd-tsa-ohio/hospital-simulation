@@ -378,7 +378,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	@Override
 	public double evaluate() 
 	{		
-		return - combinedSet.size();
+		return combinedSet.size();
 	}
 //	  public void calculateMinDistToGoal() {
 //		    HeuristicFunction heuristic;
