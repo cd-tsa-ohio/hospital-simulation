@@ -528,9 +528,9 @@ class PDComparator implements Comparator {
 		PeriodicProblemDay pd2 = (PeriodicProblemDay) o2;
 		if (pd1.evaluate() <= pd2.evaluate()) {
 		        
-			return -1; }
+			return 1; }
 		else
-		{	return 1; }
+		{	return -1; }
 	}
 	
 }
