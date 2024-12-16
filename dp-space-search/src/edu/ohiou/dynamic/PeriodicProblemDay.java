@@ -174,7 +174,6 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		
 	}
 	//excel read
-	
 	public static List<Integer> getData ( ) throws IOException
 	
 	{ 
@@ -267,7 +266,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//9/24/ need to look at this 
 		//gs.currentDay = 6;
 		SpaceSearcher ss = null;
-		String searchString = "BL";
+		String searchString = "BLIND";
 		
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
@@ -414,27 +413,58 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //classes	
 	
 	class PDCellRenderer extends DefaultTableCellRenderer  {
-		
-		 public Component getTableCellRendererComponent(
+		 Set<Patient>totalPatient=new HashSet<>();
+		public PDCellRenderer(Set<Patient> totalPatients) {
+			this.totalPatient=totalPatients;
+		}
+		 public PDCellRenderer() {
+			// TODO Auto-generated constructor stub
+		}
+		public Component getTableCellRendererComponent(
                 JTable table, Object value,
                 boolean isSelected, boolean hasFocus,
                 int row, int column) {
 			 
 			 Component component = super.getTableCellRendererComponent
 			 	(table, value, isSelected, hasFocus, row, column);
+			 
 			 int number = 0;
 			try {
 				number = (Integer) value;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-//				e.printStackTrace();
+			} catch (Exception e)
+			{
+				
 			}
+			
 			 if ( number == 1) { 
 				 component.setBackground(Color.yellow);
 			 }
+			
 			 else {
 				 component.setBackground(Color.white);
 			 }
+			 Patient p= (Patient) table.getValueAt(row, 0);
+			 if (number==1 && combinedSet.contains(p) )
+			 {
+				 component.setBackground(Color.green);
+			 
+			 }
+			 else
+			 {
+			 
+				 if (number==1 && p.arrivalDay<=currentDay)
+				 {
+					 component.setBackground(Color.red);
+				 }
+				 else
+				 {
+					 if (number==1 && (column==currentDay+1))
+					 {
+						 component.setBackground(Color.cyan);
+					 }
+				 }
+			 }
+			 
 //			 if (isOnVisitedPath(row+1, column)) {
 //				 component.setBackground(Color.yellow);
 //			 }
@@ -461,29 +491,31 @@ class PeriodicDayPanel extends JPanel
 		ModelTable problemTable = new ModelTable(problemTM);
 		problemTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
 		problemTable.setDefaultRenderer(String.class, new PDCellRenderer());
-		ModelTable stateTable = new ModelTable(stateTM);
+		problemTable.setDefaultRenderer(Object.class,new PDCellRenderer());
+	//	ModelTable stateTable = new ModelTable(stateTM);
+		//stateTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
 		boolean  useSplitPane = false;
 		setLayout(new BorderLayout());
 		if (useSplitPane) {
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				new JScrollPane(problemTable), new JScrollPane(stateTable));
-		splitPane.setOneTouchExpandable(true);
-		splitPane.setDividerLocation(150);
+//		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+//				new JScrollPane(problemTable), new JScrollPane(stateTable));
+//		splitPane.setOneTouchExpandable(true);
+//		splitPane.setDividerLocation(150);
 	
-		this.add(splitPane,BorderLayout.CENTER);
+	//	this.add(splitPane,BorderLayout.CENTER);
 
 		}
 		else {
 			JTabbedPane tabbedPane = new JTabbedPane();
 			tabbedPane.addTab("Problem table", null, new JScrollPane(problemTable),
 	                  "Display initial problem table, where checkmarks show when patients need resources");
-			JScrollPane stateScrollPane = new JScrollPane(stateTable);
+	//		JScrollPane stateScrollPane = new JScrollPane(stateTable);
 			
-			tabbedPane.addTab("State table", null, stateScrollPane,
-	                  "Display selected state table, where rows show currently selected patients in the state" 
-	                		  + "and checkmarks show when selected patients need resources"); 
+//			tabbedPane.addTab("State table", null, stateScrollPane,
+//	                  "Display selected state table, where rows show currently selected patients in the state" 
+//	                		  + "and checkmarks show when selected patients need resources"); 
 			this.add(new JScrollPane(tabbedPane),BorderLayout.CENTER);
-			tabbedPane.setSelectedComponent(stateScrollPane);
+	//		tabbedPane.setSelectedComponent(stateScrollPane);
 			try {
 				this.add(new JLabel(getHeuristic().getClass().getName()),BorderLayout.SOUTH);
 			} catch (HeuristicException e) {
