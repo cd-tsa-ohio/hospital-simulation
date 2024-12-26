@@ -74,7 +74,7 @@ public class Comb
 			System.out.println("run list " + runList);
 			count++;
 			System.out.println("count " + count);
-			if (count > 15) {
+			if (count > 70) {
 				throw new Exception("aborting infintie loop");
 			}
 		}
