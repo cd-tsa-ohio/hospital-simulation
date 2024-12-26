@@ -266,7 +266,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//9/24/ need to look at this 
 		//gs.currentDay = 6;
 		SpaceSearcher ss = null;
-		String searchString = "BLIND";
+		String searchString = "BLIN";
 		
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
@@ -395,6 +395,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	{		
 			panel = new PeriodicDayPanel ();
 	}
+	
+	public String toToolTipString() {
+		return "I am a toolTipString";
+	}
 
 // get all patient method
 	public static ArrayList<Patient> getAllPatient ()
@@ -514,7 +518,9 @@ class PeriodicDayPanel extends JPanel
 //			tabbedPane.addTab("State table", null, stateScrollPane,
 //	                  "Display selected state table, where rows show currently selected patients in the state" 
 //	                		  + "and checkmarks show when selected patients need resources"); 
-			this.add(new JScrollPane(tabbedPane),BorderLayout.CENTER);
+			JPanel interimPanel = new JPanel();
+			interimPanel.add(problemTable);
+			this.add(new JScrollPane(problemTable),BorderLayout.WEST); //  interimPanel 
 	//		tabbedPane.setSelectedComponent(stateScrollPane);
 			try {
 				this.add(new JLabel(getHeuristic().getClass().getName()),BorderLayout.SOUTH);
@@ -610,6 +616,9 @@ class Patient
 	public boolean isRequiresResource2(Patient a)
 	{
 		return a.resource2==1 ;
+	}
+	public String toToolTipString() {
+		return "I am a toolTipString";
 	}
 	
 }
