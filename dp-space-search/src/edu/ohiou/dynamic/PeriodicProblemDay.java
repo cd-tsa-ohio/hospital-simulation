@@ -6,48 +6,42 @@ import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.IntStream;
-import java.io.IOException;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
-import org.apache.poi.ss.usermodel.*;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import edu.ohiou.mfgresearch.labimp.basis.ViewObject;
 import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.DefaultSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.HeuristicException;
-import edu.ohiou.mfgresearch.labimp.spacesearch.HeuristicFunction;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
 import edu.ohiou.mfgresearch.labimp.table.ModelTable;
 import edu.ohiou.mfgresearch.labimp.table.RectangularTableModel;
 import edu.ohiou.mfgresearch.labimp.table.TableCellGenerator;
-import java.util.stream.IntStream;
+
 public class PeriodicProblemDay extends ComparableSpaceState {
 	// parameters
 
@@ -113,10 +107,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		return currentDay==capacity.size();
 	}
 	
-	public boolean isSearchComplete(SpaceSearcher ss) {
-		boolean lastDay=ss.getOpen().isEmpty();
-		return canBeGoal()&&lastDay;
-	}
+//	public boolean isSearchComplete(SpaceSearcher ss) {
+//		boolean lastDay=ss.getOpen().isEmpty();
+//		return canBeGoal()&&lastDay;
+//	}
 	public boolean isBetterThan(Searchable inState) {
 		DefaultSpaceState other = (DefaultSpaceState) inState;
 		return this.evaluate() > other.evaluate();
