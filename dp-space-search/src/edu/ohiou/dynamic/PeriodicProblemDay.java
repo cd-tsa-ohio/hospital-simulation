@@ -517,7 +517,7 @@ class PeriodicDayPanel extends JPanel
 //	                		  + "and checkmarks show when selected patients need resources"); 
 			JPanel interimPanel = new JPanel();
 			interimPanel.add(problemTable);
-			this.add(new JScrollPane(problemTable),BorderLayout.WEST); //  interimPanel 
+			this.add(new JScrollPane(problemTable),BorderLayout.CENTER); //  interimPanel 
 	//		tabbedPane.setSelectedComponent(stateScrollPane);
 			try {
 				this.add(new JLabel(getHeuristic().getClass().getName()),BorderLayout.SOUTH);
