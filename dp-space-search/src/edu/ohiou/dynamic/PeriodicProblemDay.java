@@ -290,7 +290,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	public String toString () 
 	{		
-		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate() ;
+		return super.toString() + "PPD"+ "->" + currentDay +  ","  + evaluate() ;
+//		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate() ;
 	}	
 	public Set<Searchable> makeNewStates() 
 	{			
@@ -355,7 +356,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public boolean equals(Searchable s) {
 		PeriodicProblemDay sse2 = (PeriodicProblemDay) s;
 		// TODO Auto-generated method stub
-		return  sse2.statePat==statePat && sse2.currentDay== currentDay ;
+		boolean res = sse2.statePat==statePat && sse2.currentDay== currentDay ;
+
+		return  res;
 	}
 	
 	public int hashCode() {
@@ -565,6 +568,13 @@ class PDComparator implements Comparator {
 		{	return -1; }
 	}
 	
+	public boolean equals(Object o1, Object o2) {
+		PeriodicProblemDay pd1 = (PeriodicProblemDay) o1;
+		PeriodicProblemDay pd2 = (PeriodicProblemDay) o2;
+		// TODO Auto-generated method stub
+		boolean res = pd1.statePat==pd2.statePat && pd2.currentDay== pd2.currentDay ;
+		return  res;
+	}
 }
 
 class Patient
@@ -598,6 +608,18 @@ class Patient
 	{
 		return (  name +" <arr " + arrivalDay + ",los " + los +">"+"res1"+">"+resource1+"res2"+">"+resource2);
 	}
+	
+//	public boolean equals(Patient p) {
+//		PeriodicProblemDay sse2 = (PeriodicProblemDay) s;
+//		// TODO Auto-generated method stub
+//		return  sse2.statePat==statePat && sse2.currentDay== currentDay ;
+//	}
+//	
+//	public int hashCode() {
+//		return  statePat.hashCode() + currentDay.;	
+//	}
+	
+	
 	public boolean isStayingDay(int day)
 	{
 		return day>=arrivalDay && day<arrivalDay+los;
