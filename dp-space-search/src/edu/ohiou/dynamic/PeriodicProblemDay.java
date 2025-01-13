@@ -35,9 +35,11 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.BlindSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.ComparableSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.DefaultSpaceState;
 import edu.ohiou.mfgresearch.labimp.spacesearch.HeuristicException;
+import edu.ohiou.mfgresearch.labimp.spacesearch.HeuristicFunction;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
+import edu.ohiou.mfgresearch.labimp.spacesearch.TravelingSalesman;
 import edu.ohiou.mfgresearch.labimp.table.ModelTable;
 import edu.ohiou.mfgresearch.labimp.table.RectangularTableModel;
 import edu.ohiou.mfgresearch.labimp.table.TableCellGenerator;
@@ -65,7 +67,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
    ArrayList <Patient> statePat= new ArrayList<Patient>();  
   Set<Patient> combinedSet = new HashSet<>();
   static String currentHeuristic="";
-  double maxpatientnumber;
+  double maxPatientToTake;
    static {
 //	   XLSX_FOLDER = getProperty(PeriodicProblemDay.class, "XLSX_FOLDER");
    }
@@ -94,11 +96,27 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		node = new DefaultMutableTreeNode(this);
 		
 	}
+	
 	//methods
 	private boolean isFeasible() 
 	{
 		return true;
 	}
+	  public double maxPatTaken() {
+		    return maxPatientToTake;
+		  }
+	  public void calculateMaxPatToGoal() {
+		    HeuristicFunction heuristic;
+		    try {
+		      if (this.currentHeuristic.equalsIgnoreCase(""))
+		    	  heuristic = getHeuristic();
+		      else 
+		          heuristic = getHeuristic(this.currentHeuristic);
+		      maxPatientToTake = heuristic.evaluate();
+		    } catch (HeuristicException e) {
+		    	maxPatientToTake = Double.NaN;
+		    }
+		      }
 	//This is second thing- if it is last day (check)
 	//Ways:size of the capacity is the day data()
 		//patient with max day of the stay 	
@@ -260,7 +278,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//9/24/ need to look at this 
 		//gs.currentDay = 6;
 		SpaceSearcher ss = null;
-		String searchString = "BLIN";
+		String searchString = "BLID";
 		
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
@@ -290,7 +308,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	public String toString () 
 	{		
-		return super.toString() + "PPD"+ "->" + currentDay +  ","  + evaluate() ;
+		return super.toString() + "PPD"+ "->" + currentDay +  ","  + "Taken->"+ evaluate() +" CanBe->" + maxPatientToTake +" Total->" + (evaluate ()+ maxPatientToTake) ;
 //		return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate() ;
 	}	
 	public Set<Searchable> makeNewStates() 
@@ -299,7 +317,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		Set<Searchable>  states=  new HashSet<Searchable>();	
 		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );		
 		if (this.currentDay==capacity.size())
-		{			
+		{		
+			//this.calculateMaxPatToGoal();
 			return states;
 		}
 		// dns 092023 test if we are in the last day.
@@ -314,8 +333,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			{
 				newStPat.add(p2);
 			}								
-		}		
-		states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
+		}	
+		//in every new state 
+		PeriodicProblemDay ts= new  PeriodicProblemDay(this,newStPat,currentDay+1);
+		states.add(ts);
+		ts.calculateMaxPatToGoal();
+	//	states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
 		//now comes the new patient
 		if (nextDyPat !=null)
 		{
@@ -342,11 +365,13 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			{					
 				allNewPat.add(i);
 			}
-				
-				states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));		
-				
+				PeriodicProblemDay ps= new  PeriodicProblemDay(this,allNewPat,currentDay+1);
+				states.add(ps);
+				//states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));		
+				ps.calculateMaxPatToGoal();
 			}
 		}
+		
 		}	
 		
 		return states;
@@ -609,17 +634,6 @@ class Patient
 		return (  name +" <arr " + arrivalDay + ",los " + los +">"+"res1"+">"+resource1+"res2"+">"+resource2);
 	}
 	
-//	public boolean equals(Patient p) {
-//		PeriodicProblemDay sse2 = (PeriodicProblemDay) s;
-//		// TODO Auto-generated method stub
-//		return  sse2.statePat==statePat && sse2.currentDay== currentDay ;
-//	}
-//	
-//	public int hashCode() {
-//		return  statePat.hashCode() + currentDay.;	
-//	}
-	
-	
 	public boolean isStayingDay(int day)
 	{
 		return day>=arrivalDay && day<arrivalDay+los;
@@ -634,9 +648,11 @@ class Patient
 		return a.resource2==1 ;
 	}
 	public String toToolTipString() {
-		return "I am a toolTipString";
+		return name;
 	}
 	
+	
 }
+
 
 
