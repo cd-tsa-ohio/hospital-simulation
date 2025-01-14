@@ -25,7 +25,7 @@ public class MaxPatOptimization implements HeuristicFunction {
 			return result;	
 			}
 			int futureDays=state.currentDay+1;
-			while (futureDays<state.capacity.size())
+			while (futureDays<state.capacity.size())  // should this be  <= to include the last day
 			{
 				//if ((futureDays+1)<state.capacity.size())
 					
