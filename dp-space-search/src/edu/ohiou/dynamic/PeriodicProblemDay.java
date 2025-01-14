@@ -39,7 +39,6 @@ import edu.ohiou.mfgresearch.labimp.spacesearch.HeuristicFunction;
 import edu.ohiou.mfgresearch.labimp.spacesearch.InformedSearcher;
 import edu.ohiou.mfgresearch.labimp.spacesearch.Searchable;
 import edu.ohiou.mfgresearch.labimp.spacesearch.SpaceSearcher;
-import edu.ohiou.mfgresearch.labimp.spacesearch.TravelingSalesman;
 import edu.ohiou.mfgresearch.labimp.table.ModelTable;
 import edu.ohiou.mfgresearch.labimp.table.RectangularTableModel;
 import edu.ohiou.mfgresearch.labimp.table.TableCellGenerator;
