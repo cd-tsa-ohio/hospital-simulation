@@ -24,17 +24,20 @@ public class MaxPatOptimization implements HeuristicFunction {
 			{
 			return result;	
 			}
-			int futureDays=state.currentDay;
-			for (Map.Entry<Integer,ArrayList<Patient>>entry : state.map.entrySet())
-			{if ((futureDays+1)<state.capacity.size())
-					{
+			int futureDays=state.currentDay+1;
+			while (futureDays<state.capacity.size())
+			{
+				//if ((futureDays+1)<state.capacity.size())
+					
 				
-				if(state.map.get(futureDays+1)!=null) {
+				if(state.map.get(futureDays)!=null)
+				{
 					//result=result+state.map.get(state.currentDay+1).size()+state.combinedSet.size();
-					result=result+state.map.get(futureDays+1).size();
-					futureDays++;
+					result=result+state.map.get(futureDays).size();
+				
 				}
-					}
+				futureDays++;
+					
 			}
 			return result;
 		}
