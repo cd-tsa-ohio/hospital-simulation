@@ -397,8 +397,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	@Override
 	public double evaluate() 
-	{		
+	{	
 		return combinedSet.size();
+
 	}
 //	  public void calculateMinDistToGoal() {
 //		    HeuristicFunction heuristic;
@@ -585,7 +586,7 @@ class PDComparator implements Comparator {
 			return 0;
 		PeriodicProblemDay pd1 = (PeriodicProblemDay) o1;
 		PeriodicProblemDay pd2 = (PeriodicProblemDay) o2;
-		if (pd1.evaluate() <= pd2.evaluate()) {
+		if (pd1.evaluate() + pd1.maxPatientToTake <= pd2.evaluate() + pd2.maxPatientToTake) {
 		        
 			return 1; }
 		else
