@@ -1,6 +1,8 @@
 package edu.ohiou.dynamic;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -23,10 +25,13 @@ public class MaxCapacityWithoutCurrent implements HeuristicFunction {
 		{
 		return result;	
 		}
-		int futureDays=state.currentDay+1;//=2
+		int futureDays=state.currentDay+1;//=
+		
 		int cap=0;
 		int futureDayPat=0;
 		ArrayList<Patient> lastDayPat=new ArrayList <Patient>();
+		ArrayList<Integer> evaluatedPat=new ArrayList <Integer>();
+		ArrayList<Patient> prevDaysPat=new ArrayList <Patient>();
 		while (futureDays<=state.capacity.size())  // should this be  <= to include the last day
 		{
 			
@@ -34,6 +39,7 @@ public class MaxCapacityWithoutCurrent implements HeuristicFunction {
 			int count=0;
 		
 			{
+				
 				ArrayList<Patient> patients=state.map.get(futureDays);
 				
 				if(state.map.get(futureDays)!=null)
@@ -49,11 +55,24 @@ public class MaxCapacityWithoutCurrent implements HeuristicFunction {
 			    }        
 			
 			    cap=state.capacity.get(futureDays-1);;	
-			    result=result+Math.min(cap, count);
+			    int ignoredPat=Math.max((count-cap), 0);
+			    evaluatedPat.add(ignoredPat);
+			    
+			 //   result=result+Math.min(cap, count);
 			
 			futureDays++;				
 		}
-
+			
+			for (int i=state.currentDay-1;i>=0;i--)
+			{
+				prevDaysPat.addAll(prevDaysPat);
+			}
+			int totalPrevDayPat=prevDaysPat.size();
+			//int currPat= state.combinedSet.size();
+			Object [] allPat=state.getAllPatient().toArray();
+			int totalPat=allPat.length;
+			result=(totalPat-totalPrevDayPat)-(Collections.max(evaluatedPat));
+			//result=
 	}
 		return result;
 	}
