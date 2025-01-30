@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -64,7 +66,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
    ArrayList <Patient> allAceepted= new ArrayList <Patient> ();
  //this holds informaiton about patients
    ArrayList <Patient> statePat= new ArrayList<Patient>();  
-  Set<Patient> combinedSet = new HashSet<>();
+  Set<Patient> acceptedPatients = new HashSet<>();
   static String currentHeuristic="";
   double maxPatientToTake;
    static {
@@ -87,10 +89,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //		}
 		currentDay = cd;	
 		parent = s;
-		this.combinedSet=new HashSet<Patient>(s.combinedSet) ;
+		this.acceptedPatients=new HashSet<Patient>(s.acceptedPatients) ;
 
 		this.statePat=decisions;	
-		this.combinedSet.addAll(decisions);
+		this.acceptedPatients.addAll(decisions);
 		
 		node = new DefaultMutableTreeNode(this);
 		
@@ -162,6 +164,18 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 		}	
 
+	}
+	
+	int futurePatientCount() {
+		
+		int patientCount = 0;
+			for (Map.Entry<Integer,ArrayList<Patient>>entry : map.entrySet())
+			{					
+				if (entry.getKey() > this.currentDay ) {
+					patientCount += entry.getValue().size();
+				}
+			}		
+		return patientCount;
 	}
 	
 	private int nextDayCap()
@@ -296,12 +310,19 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			e.printStackTrace();
 		}
 		is.createPatients();
+		is.display();
 		ss.setApplet();
 		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
-//		ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
+		ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
 //		ss.runOptSpaceSearch(3);
 //
+		ZonedDateTime startTime = ZonedDateTime.now();
+//		Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
 		
+		ZonedDateTime endTime = ZonedDateTime.now();
+//		System.out.println("DNS 2025 Result " + res);
+		System.out.println("DNS 2025 Duration from " + startTime + " to " + endTime);
+//		((ComparableSpaceState) res).display();
 	}
 
 
@@ -398,7 +419,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	@Override
 	public double evaluate() 
 	{	
-		return combinedSet.size();
+		return acceptedPatients.size();
 
 	}
 //	  public void calculateMinDistToGoal() {
@@ -470,7 +491,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				 component.setBackground(Color.white);
 			 }
 			 Patient p= (Patient) table.getValueAt(row, 0);
-			 if (number==1 && combinedSet.contains(p) )
+			 if (number==1 && acceptedPatients.contains(p) )
 			 {
 				 component.setBackground(Color.green);
 			 
@@ -511,7 +532,7 @@ class PeriodicDayPanel extends JPanel
 			daysList.add(i);
 		}
 		Object [] days= daysList.toArray();
-		Object [] statePat=combinedSet.toArray();
+		Object [] statePat=acceptedPatients.toArray();
 		RectangularTableModel problemTM = new RectangularTableModel (allPat, days, new PDGenerator());
 		RectangularTableModel stateTM = new RectangularTableModel (statePat, days, new PDGenerator());
 		ModelTable problemTable = new ModelTable(problemTM);
