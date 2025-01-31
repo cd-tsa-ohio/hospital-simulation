@@ -478,7 +478,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			 try {
 				 number = (Integer) value;
 			 } catch (Exception e) {
-				 System.out.println("Never leave the empty catch clause");
+//				 System.out.println("Never leave the empty catch clause, value is " + value);
 			 }
 
 			 if ( number == 1) { 
@@ -501,6 +501,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 					 }
 				 }
 			 }
+			 // to make current day stand out
 			 if (number == 0 && currentDay == column) {
 				 component.setBackground(Color.lightGray);
 			 }
