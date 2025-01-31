@@ -460,10 +460,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //classes	
 	
 	class PDCellRenderer extends DefaultTableCellRenderer  {
-		 Set<Patient>totalPatient=new HashSet<>();
-		public PDCellRenderer(Set<Patient> totalPatients) {
-			this.totalPatient=totalPatients;
-		}
+
 		 public PDCellRenderer() {
 			// TODO Auto-generated constructor stub
 		}
@@ -576,7 +573,7 @@ class PDGenerator implements TableCellGenerator {
 		Integer i2 = (Integer) o2;
 		// TODO Auto-generated method stub
 		
-		return  p1.isStayingDay(i2) ? 1:" ";
+		return  p1.isStayingDay(i2) ? 1 : " ";
 	}
 
 	@Override
