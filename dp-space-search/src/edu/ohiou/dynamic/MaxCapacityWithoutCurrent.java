@@ -89,10 +89,11 @@ public class MaxCapacityWithoutCurrent implements HeuristicFunction {
 		int futureDays=state.currentDay+1;//=2
 		int cap=0;
 		int futureDayPat=0;
+		
 		ArrayList<Patient> lastDayPat=new ArrayList <Patient>();
 		while (futureDays<=state.capacity.size())  // should this be  <= to include the last day
 		{
-			
+			int takenCapacity = 0;
 			int patforNextDay=0;
 			int count=0;
 		
@@ -112,6 +113,7 @@ public class MaxCapacityWithoutCurrent implements HeuristicFunction {
 			    }        
 			
 			    cap=state.capacity.get(futureDays-1);
+			    
 			    result = Math.max(result,  Math.max(0, count-cap));
 			    
 //			    result=result+Math.min(cap, count);
