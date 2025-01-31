@@ -467,61 +467,47 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		 public PDCellRenderer() {
 			// TODO Auto-generated constructor stub
 		}
-		public Component getTableCellRendererComponent(
-                JTable table, Object value,
-                boolean isSelected, boolean hasFocus,
-                int row, int column) {
-			 
+		 public Component getTableCellRendererComponent(
+				 JTable table, Object value,
+				 boolean isSelected, boolean hasFocus,
+				 int row, int column) {
+
 			 Component component = super.getTableCellRendererComponent
-			 	(table, value, isSelected, hasFocus, row, column);
-			 
+					 (table, value, isSelected, hasFocus, row, column);
 			 int number = 0;
-			try {
-				number = (Integer) value;
-			} catch (Exception e)
-			{
-				
-			}
-			
+			 try {
+				 number = (Integer) value;
+			 } catch (Exception e) {
+				 System.out.println("Never leave the empty catch clause");
+			 }
+
 			 if ( number == 1) { 
 				 component.setBackground(Color.yellow);
 			 }
-			
 			 else {
 				 component.setBackground(Color.white);
 			 }
 			 Patient p= (Patient) table.getValueAt(row, 0);
-			 if (number==1 && acceptedPatients.contains(p) )
-			 {
+			 if (number==1 && acceptedPatients.contains(p) ) {
 				 component.setBackground(Color.green);
-			 
 			 }
-			 else
-			 {
-			 
-				 if (number==1 && p.arrivalDay<=currentDay)
-				 {
+			 else {
+				 if (number==1 && p.arrivalDay<=currentDay) {
 					 component.setBackground(Color.red);
 				 }
-				 else
-				 {
-					 if (number==1 && (column==currentDay+1))
-					 {
+				 else {
+					 if (number==1 && (column==currentDay+1)) {
 						 component.setBackground(Color.cyan);
 					 }
 				 }
 			 }
-			 
-//			 if (isOnVisitedPath(row+1, column)) {
-//				 component.setBackground(Color.yellow);
-//			 }
-//			 else {
-//				 component.setBackground (Color.white);
-//			 }
+			 if (number == 0 && currentDay == column) {
+				 component.setBackground(Color.lightGray);
+			 }
 			 return component;
 		 }
 	}
-	
+
 class PeriodicDayPanel extends JPanel 
 {
 	public PeriodicDayPanel () 
