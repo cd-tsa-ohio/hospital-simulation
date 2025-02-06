@@ -273,7 +273,7 @@ public static List<Integer> getData ( ) throws IOException
 		is.currentDay = 0;
 		SpaceSearchModel2 gs = new SpaceSearchModel2();
 		SpaceSearcher ss = null;
-		String searchString = "BL";
+		String searchString = "BLD";
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
 		}
