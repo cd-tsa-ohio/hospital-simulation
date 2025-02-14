@@ -44,6 +44,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
     static List<List<Integer>> capacitylist = new ArrayList<>();
    
     static List<int[]> resourcedata = new ArrayList<>();	
+    static int resLabel = 11111111;
 
 	//creating a map of patients objects with key value an integer
 	static  Map  <Integer,ArrayList<Patient>>  map= new HashMap <Integer,ArrayList<Patient>> ();
@@ -576,13 +577,18 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 			 Component component = super.getTableCellRendererComponent
 					 (table, value, isSelected, hasFocus, row, column);
+			 // do not color resource column
+			 if (column ==1) {
+				 component.setBackground(Color.white);
+				 return component;
+			 }
 			 int number = 0;
 			 try {
 				 number = (Integer) value;
 			 } catch (Exception e) {
 //				 System.out.println("Never leave the empty catch clause, value is " + value);
 			 }
-
+			 // color yellow patients and days when resource is required
 			 if ( number == 1) { 
 				 component.setBackground(Color.yellow);
 			 }
@@ -590,21 +596,28 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				 component.setBackground(Color.white);
 			 }
 			 Patient p= (Patient) table.getValueAt(row, 0);
+			 if (p instanceof PatientCopy) {
+				 PatientCopy pc = (PatientCopy) p;
+				 p = pc.patient;
+			 }
+			 // color accepted patients green
 			 if (number==1 && acceptedPatients.contains(p) ) {
 				 component.setBackground(Color.green);
 			 }
 			 else {
+				 // color eerlier not-accepted patients red
 				 if (number==1 && p.arrivalDay<=currentDay) {
 					 component.setBackground(Color.red);
 				 }
 				 else {
+					 // color the next day patient choice cyan
 					 if (number==1 && (column==currentDay+1)) {
 						 component.setBackground(Color.cyan);
 					 }
 				 }
 			 }
 			 // to make current day stand out
-			 if (number == 0 && currentDay == column) {
+			 if (number == 0 && currentDay == column - 1) {
 				 component.setBackground(Color.lightGray);
 			 }
 			 return component;
@@ -615,15 +628,30 @@ class PeriodicDayPanel extends JPanel
 {
 	public PeriodicDayPanel () 
 	{
-		Object [] allPat=getAllPatient().toArray();
+		Object [] modelPat=getAllPatient().toArray();
 		ArrayList <Integer>  daysList= new ArrayList();
+		daysList.add(resLabel);
 		for(int i=1;i<=capacity.size();i++) {
 			daysList.add(i);
 		}
-		Object [] days= daysList.toArray();
+		Object [] columns = daysList.toArray();		
+		
+		ArrayList<Patient> multiPat = new ArrayList<Patient>();
+		for (Patient p : getAllPatient()) {
+			for (int i = 0; i < p.resources.size(); i++) {
+				if (i == 0) {
+					multiPat.add(p);
+				} else {
+					multiPat.add(new PatientCopy(p, i+1));
+				}
+			}
+		}
+		
+		modelPat = multiPat.toArray();
+		
 		Object [] statePat=acceptedPatients.toArray();
-		RectangularTableModel problemTM = new RectangularTableModel (allPat, days, new PDGenerator());
-		RectangularTableModel stateTM = new RectangularTableModel (statePat, days, new PDGenerator());
+		RectangularTableModel problemTM = new RectangularTableModel (modelPat, columns, new PDGenerator());
+		RectangularTableModel stateTM = new RectangularTableModel (statePat, columns, new PDGenerator());
 		ModelTable problemTable = new ModelTable(problemTM);
 		problemTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
 		problemTable.setDefaultRenderer(String.class, new PDCellRenderer());
@@ -674,11 +702,25 @@ class PDGenerator implements TableCellGenerator {
 
 	@Override
 	public Object makeTableCell(Object o1, Object o2) {
-		Patient p1 = (Patient) o1;
+		Patient p1 = (Patient) o1;		
 		Integer i2 = (Integer) o2;
 		// TODO Auto-generated method stub
-		
-		return  p1.isStayingDay(i2) ? 1 : " ";
+		if (i2 ==PeriodicProblemDay.resLabel) {
+			if (p1 instanceof PatientCopy) {
+				PatientCopy pc = (PatientCopy) p1;
+				return pc.resource;
+			}
+			else {
+				return 1;
+			}
+		}
+		if (p1 instanceof PatientCopy) {
+			PatientCopy pc = (PatientCopy) p1;
+			return  (pc.isStayingDay(i2) && pc.usesResource()) ? 1 : " ";
+		}
+		else {
+			return  (p1.isStayingDay(i2) && p1.usesResource(0)) ? 1 : " ";
+		}
 	}
 
 	@Override
@@ -718,10 +760,19 @@ class Patient
 	int los;
 	String name;
 	static int count=0;
-	int resource1;
-	int resource2;
+//	int resource1;
+//	int resource2;
 	 ArrayList<Integer> resources ;
 	//List<int[]> resources;	
+	public Patient () {
+		
+	}
+	 
+	 public boolean usesResource(int res) {
+		// TODO Auto-generated method stub
+		return resources.get(res) == 1;
+	}
+
 	public Patient(int a, int b) 
 	{
 		count ++;
@@ -750,7 +801,7 @@ class Patient
 	        int resource2 =resources.get(1);
 			
 		//}
-		return (  name +" <arr " + arrivalDay + ",los " + los +">"+"R1"+">"+resource1 + "R2>" +resource2);
+		return (  name +" <arr " + arrivalDay + ",los " + los +","+"R:"+ resources + ">");
 	}
 	
 	public boolean isStayingDay(int day)
@@ -772,6 +823,29 @@ class Patient
 	}
 	
 	
+}
+
+class PatientCopy extends Patient {
+	int resource;
+	Patient patient;
+	
+	public PatientCopy (Patient p, int res) {
+		patient = p;
+		resource = res;	
+	}
+	
+	public String toString () {
+		return "";
+	}
+	public boolean isStayingDay(int day)
+	{
+		return patient.isStayingDay(day);
+	}
+	
+	 public boolean usesResource() {
+		// TODO Auto-generated method stub
+		return patient.resources.get(resource-1) == 1;
+	}
 }
 
 
