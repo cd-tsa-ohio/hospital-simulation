@@ -139,13 +139,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			  ArrayList<Integer> resReq =new ArrayList<Integer> ();
 				for(int k=0;k<2;k++)
 				{
-					resReq.add(resourcedata.get(i)[k]);
-					
-					
+					resReq.add(resourcedata.get(i)[k]);					
 				}
-			ArrayList<Patient> pat=map.get(data.get(i)[0]);
-			
-			
+			ArrayList<Patient> pat=map.get(data.get(i)[0]);	
 			if (pat==null)
 			{	
 				//we create a patient with arrival day and los, and put that in the map with the key as arrival day
@@ -211,18 +207,26 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 						totalResReq+=1;
 					}				
 				}
+				for (Patient p:statePat)
+				{
+					if(p.isStayingDay(currentDay+1)&&(p.resources.get(i)==1))
+					{
+						totalResReq+=1;
+
+					}
+				}
 				if (nextDayCap2(i, currentDay, totalResReq)<0)
 				{
-					return false; 
+					return true; 
 				}
 			}			
-		return true;
+		return false;
 	}
 	private int nextDayCap2(int innerList ,int outerList,int num)
 
-	{
-
-		return  capacitylist.get(innerList).get(outerList) - num;
+	{		
+		int capacityAvailable=capacitylist.get(innerList).get(outerList) - num;
+		return capacityAvailable  ;
 		
 	}
 	
@@ -360,17 +364,17 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		is.display();
 		ss.setApplet();
 		//ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
-		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
+	ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
 		ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
 //		ss.runOptSpaceSearch(3);
 //
 		ZonedDateTime startTime = ZonedDateTime.now();
-//		Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
+	//	Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
 		
 		ZonedDateTime endTime = ZonedDateTime.now();
 //		System.out.println("DNS 2025 Result " + res);
 		System.out.println("DNS 2025 Duration from " + startTime + " to " + endTime);
-//		((ComparableSpaceState) res).display();
+//	((ComparableSpaceState) res).display();
 		
 	}
 
@@ -458,6 +462,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//arraylist of patients who are my new state patients
 		ArrayList <Patient> newStPat= new ArrayList <Patient> ();
 		ArrayList <Patient> nextDyPat= map.get(currentDay+1);
+	
 		ArrayList <Patient> previousDyPat= new ArrayList <Patient> ();	
 		
 		//iterating over statepat which stores information of all the patient based on current state 
@@ -466,18 +471,15 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			if(p2.isStayingDay(currentDay+1))
 			{
 				newStPat.add(p2);
+				
 			}								
 		}	
 		//in every new state 
 		PeriodicProblemDay ts= new  PeriodicProblemDay(this,newStPat,currentDay+1);
 		states.add(ts);
 		ts.calculateMaxPatToGoal();
-	//	states.add(new PeriodicProblemDay(this,newStPat,currentDay+1));
-		//now comes the new patient
 		if (nextDyPat !=null)
-		{
-			//int nextDayCap= nextDayCap();			
-		//	if (nextDayCap>0)				
+		{		
 			{
 			List<Patient> nxtDyPatIter = nextDyPat;
 			List<List<Patient>> nextDayComb=new ArrayList <>();
@@ -495,7 +497,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			for (List<Patient> ndi :nextDayComb)
 			{
 				ArrayList <Patient> allNewPat= new ArrayList <Patient> (newStPat);
-				if (isNotFeasible2(ndi)==true)
+				if (isNotFeasible2(ndi)==false)
 				{
 				for (Patient i : ndi )
 			{					
