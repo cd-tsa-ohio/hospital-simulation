@@ -197,35 +197,35 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public boolean isNotFeasible2(List<Patient> ndi  )
 	{	
 	
-			for (int i=0; i<capacitylist.size();i++)
+			for (int res=0; res<capacitylist.size();res++)
 			{
 				int totalResReq=0;
 				for (Patient p: ndi)
 				{				
-						if(p.resources.get(i)==1)
+						if(p.resources.get(res)==1)
 					{
 						totalResReq+=1;
 					}				
 				}
 				for (Patient p:statePat)
 				{
-					if(p.isStayingDay(currentDay+1)&&(p.resources.get(i)==1))
+					if(p.isStayingDay(currentDay+1)&&(p.resources.get(res)==1))
 					{
 						totalResReq+=1;
 
 					}
 				}
-				if (nextDayCap2(i, currentDay, totalResReq)<0)
+				if (nextDayCap2(res, currentDay, totalResReq)<0)
 				{
 					return true; 
 				}
 			}			
 		return false;
 	}
-	private int nextDayCap2(int innerList ,int outerList,int num)
+	private int nextDayCap2(int resource ,int day,int num)
 
 	{		
-		int capacityAvailable=capacitylist.get(innerList).get(outerList) - num;
+		int capacityAvailable=capacitylist.get(resource).get(day) - num;
 		return capacityAvailable  ;
 		
 	}
@@ -384,7 +384,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		return super.toString() + "PPD"+ "->" + currentDay +  ","  + "Taken->"+ evaluate() +" CanBe->" + maxPatientToTake +" Total->" + (evaluate ()+ maxPatientToTake) ;
 		//return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate() ;
 	}	
-	public Set<Searchable> makeNewStates2() 
+	public Set<Searchable> makeNewStatesOld() 
 	{			
 		//to store new states in states
 		Set<Searchable>  states=  new HashSet<Searchable>();	
@@ -502,10 +502,13 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				for (Patient i : ndi )
 			{					
 				allNewPat.add(i);
+//				allNewPat.addAll(c) // uncomment this
 			}
 				}
 				PeriodicProblemDay ps= new  PeriodicProblemDay(this,allNewPat,currentDay+1);
+//				if (!ps.isNotFeasible2(ndi)) { // uncomment this
 				states.add(ps);
+//				}                               // uncomment this
 			ps.calculateMaxPatToGoal();
 					
 			}
@@ -580,10 +583,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			 Component component = super.getTableCellRendererComponent
 					 (table, value, isSelected, hasFocus, row, column);
 			 // do not color resource column
-			 if (column ==1) {
-				 component.setBackground(Color.white);
-				 return component;
-			 }
+//			 if (column ==1) {
+//				 component.setBackground(Color.white);
+//				 return component;
+//			 }
 			 int number = 0;
 			 try {
 				 number = (Integer) value;
@@ -613,15 +616,23 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				 }
 				 else {
 					 // color the next day patient choice cyan
-					 if (number==1 && (column==currentDay+1)) {
+					 if (number==1 && (column==currentDay+2)) {
 						 component.setBackground(Color.cyan);
 					 }
 				 }
+			 }
+			 // make different shades for different resources
+			 int numResources = capacitylist.size();
+			 int i = row % numResources;
+			 int colorLevel = 255 - i * 10;
+			 if (number == 0 || column == 1) { 
+				 component.setBackground(new Color (colorLevel, colorLevel, colorLevel));
 			 }
 			 // to make current day stand out
 			 if (number == 0 && currentDay == column - 1) {
 				 component.setBackground(Color.lightGray);
 			 }
+				 
 			 return component;
 		 }
 	}
