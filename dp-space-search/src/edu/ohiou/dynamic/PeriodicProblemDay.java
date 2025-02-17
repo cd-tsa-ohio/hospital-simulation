@@ -194,22 +194,35 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		return NextDayCap;
 		
 	}
-	public boolean isNotFeasible2(List<Patient> ndi  )
+	public boolean isNotFeasible2( )
 	{	
 	
 			for (int res=0; res<capacitylist.size();res++)
 			{
 				int totalResReq=0;
-				for (Patient p: ndi)
-				{				
-						if(p.resources.get(res)==1)
-					{
-						totalResReq+=1;
-					}				
-				}
+
+//				for (Patient p: ndi)
+//				{				
+//						if(p.resources.get(res)==1)
+//					{
+//						totalResReq+=1;
+//					}				
+//				}
+//				for (Patient p:statePat)
+//				{
+//					if(p.isStayingDay(currentDay+1)&&(p.resources.get(res)==1))
+
+//				for (Patient p: ndi)
+//				{				
+//						if(p.resources.get(i)==1)
+//					{
+//						totalResReq+=1;
+//					}				
+//				}
 				for (Patient p:statePat)
 				{
-					if(p.isStayingDay(currentDay+1)&&(p.resources.get(res)==1))
+					if((p.resources.get(res)==1))
+
 					{
 						totalResReq+=1;
 
@@ -364,12 +377,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		is.display();
 		ss.setApplet();
 		//ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
-	ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
-		ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
+ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
+	//	ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
 //		ss.runOptSpaceSearch(3);
 //
 		ZonedDateTime startTime = ZonedDateTime.now();
-	//	Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
+		Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
 		
 		ZonedDateTime endTime = ZonedDateTime.now();
 //		System.out.println("DNS 2025 Result " + res);
@@ -378,7 +391,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		
 	}
 
-
+//
 	public String toString () 
 	{		
 		return super.toString() + "PPD"+ "->" + currentDay +  ","  + "Taken->"+ evaluate() +" CanBe->" + maxPatientToTake +" Total->" + (evaluate ()+ maxPatientToTake) ;
@@ -497,19 +510,26 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			for (List<Patient> ndi :nextDayComb)
 			{
 				ArrayList <Patient> allNewPat= new ArrayList <Patient> (newStPat);
-				if (isNotFeasible2(ndi)==false)
+			//	if (isNotFeasible2(ndi)==false)
 				{
-				for (Patient i : ndi )
+			//	for (Patient i : ndi )
 			{					
-				allNewPat.add(i);
-//				allNewPat.addAll(c) // uncomment this
+			//	allNewPat.add(i);
+			allNewPat.addAll(ndi); // uncomment this
 			}
 				}
 				PeriodicProblemDay ps= new  PeriodicProblemDay(this,allNewPat,currentDay+1);
+
 //				if (!ps.isNotFeasible2(ndi)) { // uncomment this
-				states.add(ps);
+				//states.add(ps);
 //				}                               // uncomment this
+			//ps.calculateMaxPatToGoal();
+
+				if (!ps.isNotFeasible2())
+				{
+				states.add(ps);}
 			ps.calculateMaxPatToGoal();
+
 					
 			}
 		}
