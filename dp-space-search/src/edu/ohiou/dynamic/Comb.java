@@ -17,30 +17,25 @@ public class Comb
 	public static 	List<List<Patient>> createCombinations(List<Patient> iterable, int r) throws Exception 
 	{
 		List<List<Patient>>resList = new ArrayList<>();
-		int count =0;
-
+	//	int count =0;
 		List<Patient> runList =new ArrayList<>();
 		int n=iterable.size();
+		int maxComb=calPossComb(n,r);
 		if (r>n)
 		{
 			return resList;
 
 		}
-
 		int [] indices=new int[r]; // line 40 in python
 		for (int jj= 0; jj<r;jj++)
 		{
 			indices[jj]=jj;
 		}
-
 		for (int i = 0; i < r; i++)
 		{
 			runList.add(iterable.get(indices[i])) ;
 		}
 		resList.add(runList);// line 41
-
-		//System.out.print(resList);
-
 		boolean a = true;
 		boolean broken = false;
 		while (a)
@@ -60,43 +55,89 @@ public class Comb
 				return resList;
 			}
 			indices[i] += 1;	
-
 			for (int j = i+1 ; j < r; j++) {
 				indices[j] = indices[j - 1] + 1;
 			}
-			System.out.println("indices: " + Arrays.toString(indices));
-
 			for (int ii = 0; ii < r; ii++)
 			{
 				runList.add(iterable.get(indices[ii])) ;
 			}
 			resList.add(runList);
-			System.out.println("run list " + runList);
-			count++;
-			System.out.println("count " + count);
-			if (count > 70) {
-				throw new Exception("aborting infintie loop");
-			}
+			
+			//count++;
+			//System.out.println("count " + count);
+
+//			if (count > maxComb) {
+//
+//				throw new Exception("aborting infintie loop");
+//			}
 		}
-
-
-
 		return resList;
 
+	}
+	public static  int calPossComb(int n, int r)
+	{    if (r>n)
+		return 0;
+	if  (r==0 || r ==n)
+	{
+		return 1;
+	}
+	int value=1;
+	for (int i=1; i<=r;i++)
+	{
+		value= value*(n-i+1)/i;
+	}
+		return value;
 	}
 
 	public static void main(String[] args)
 	{
 
-		List<Integer>a = new ArrayList<>();
-		a.add(1);
-		a.add(2);
-		a.add(3);
-		a.add(4);
-		a.add(5);
+		List<Patient>a = new ArrayList<>();
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
+		a.add(new Patient(1,3));
 		Comb b= new Comb();
 		try {
-			//System.out.print( b.createCombinations(a, 3));
+			
+			
+			List<List<Patient>> test=b.createCombinations(a, 2);
+			//System.out.println( b.createCombinations(a, 3));
+			//System.out.println(test);
+			System.out.println("combination: " +test.size());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
