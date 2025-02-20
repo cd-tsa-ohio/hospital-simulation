@@ -29,29 +29,18 @@ import edu.ohiou.mfgresearch.labimp.table.TableCellGenerator;
 public class PeriodicProblemDay extends ComparableSpaceState {
 	// parameters
 
-	int NextDayCap;
-//	int PatientTaken;
+	//int NextDayCap;
 	int currentDay;
-	//int EvaluatePatients;
-	// need to have decision day instead of decisions
-	//variable for free capacity
-	//array list of patients	
 	static String XLSX_FOLDER;
 	//static int data[][]= {{1,3},{1,2},{2,2},{3,1}};
-	static List<int[]> data = new ArrayList<>();	
-    static ArrayList <Integer> capacity =new ArrayList<>();
-
-    static List<List<Integer>> capacitylist = new ArrayList<>();
-   
+	static List<int[]> data = new ArrayList<>();	  
+    static List<List<Integer>> capacitylist = new ArrayList<>();  
     static List<int[]> resourcedata = new ArrayList<>();	
     static int resLabel = 11111111;
-
 	//creating a map of patients objects with key value an integer
 	static  Map  <Integer,ArrayList<Patient>>  map= new HashMap <Integer,ArrayList<Patient>> ();
 	static 	{printIndex = true;}
    static  ArrayList <Patient> nd= new ArrayList <Patient> ();
-  // ArrayList <Patient> allAceepted= new ArrayList <Patient> ();
- //this holds informaiton about patients
    ArrayList <Patient> statePat= new ArrayList<Patient>();  
   Set<Patient> acceptedPatients = new HashSet<>();
   static String currentHeuristic="";
@@ -110,7 +99,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//patient with max day of the stay 	
 	public boolean canBeGoal() {
 		//boolean allPatientsExplored=statePat.isEmpty();
-		return currentDay==capacity.size();
+		return currentDay==capacitylist.get(0).size();
 	}
 	
 //	public boolean isSearchComplete(SpaceSearcher ss) {
@@ -173,27 +162,27 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		return patientCount;
 	}
 	
-	private int nextDayCap()
-
-	{
-		if (currentDay>=capacity.size())
-				{
-			return 0;
-				}
-		NextDayCap=capacity.get(currentDay);
-		//statepat is the arraylist of patient currently staying in the hospital
-		for (Patient p:statePat)
-		{
-			if(p.isStayingDay(currentDay+1))
-			{
-				NextDayCap-=1;
-
-			}
-		}
-	
-		return NextDayCap;
-		
-	}
+//	private int nextDayCap()
+//
+//	{
+//		if (currentDay>=capacity.size())
+//				{
+//			return 0;
+//				}
+//		NextDayCap=capacity.get(currentDay);
+//		//statepat is the arraylist of patient currently staying in the hospital
+//		for (Patient p:statePat)
+//		{
+//			if(p.isStayingDay(currentDay+1))
+//			{
+//				NextDayCap-=1;
+//
+//			}
+//		}
+//	
+//		return NextDayCap;
+//		
+//	}
 	public boolean isNotFeasible2( )
 	{	
 	
@@ -201,24 +190,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			{
 				int totalResReq=0;
 
-//				for (Patient p: ndi)
-//				{				
-//						if(p.resources.get(res)==1)
-//					{
-//						totalResReq+=1;
-//					}				
-//				}
-//				for (Patient p:statePat)
-//				{
-//					if(p.isStayingDay(currentDay+1)&&(p.resources.get(res)==1))
 
-//				for (Patient p: ndi)
-//				{				
-//						if(p.resources.get(i)==1)
-//					{
-//						totalResReq+=1;
-//					}				
-//				}
 				for (Patient p:statePat)
 				{
 					if((p.resources.get(res)==1))
@@ -244,106 +216,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	}
 	
 	//excel read
-	public static List<Integer> getData ( ) throws IOException
 	
-	{ 
-		File excelFile = ViewObject.chooseFile("XLSX", "Excel", "Choose the file with the example data ");
-		FileInputStream fis=new FileInputStream(excelFile);  
-		Workbook wb=new XSSFWorkbook(fis); 
-		//getting name of the ranges
-		Name capacityrangename=wb.getName("Capacity");
-		Name patientdatarangename= wb.getName("PatientData");	
-		Name resource1Range=wb.getName("Resource1");
-		Name resource2Range=wb.getName("Resource2");
-		Name capacity2Range=wb.getName("capacity2");
-	
-		
-		CellRangeAddress capacitycellRange = CellRangeAddress.valueOf(capacityrangename.getRefersToFormula());
-		CellRangeAddress patientcellRange2 = CellRangeAddress.valueOf(patientdatarangename.getRefersToFormula());
-		CellRangeAddress resource1cellRange2 = CellRangeAddress.valueOf(resource1Range.getRefersToFormula());
-		CellRangeAddress resource2Range2 = CellRangeAddress.valueOf(resource2Range.getRefersToFormula());
-		CellRangeAddress capacity2cellRange2 = CellRangeAddress.valueOf(patientdatarangename.getRefersToFormula());
-		//9/24/24: iterating over 1 sheet, need to iterate over multiple sheets to add multi region logic
-		Sheet sheet= wb.getSheetAt(0);		
-		for (int i = capacitycellRange.getFirstRow(); i<=capacitycellRange.getLastRow();i++)
-		{
-			Row row= sheet.getRow(i);
-			 for (int colNum = capacitycellRange.getFirstColumn(); colNum <= capacitycellRange.getLastColumn(); colNum++) 
-			 {
-	                Cell cell = row.getCell(colNum);
-	                Object cellValue = getValues(cell);
-	                capacity.add((Integer) cellValue);	   
-	          }
-			 
-		}	
-		capacitylist.add(capacity);
-		capacitylist.add(capacity);
-		//adding values for resources
-		 //filling resources
-		 for (int i = resource1cellRange2.getFirstRow(); i<=resource1cellRange2.getLastRow();i++)
-		 {
-			 
-			 Row row= sheet.getRow(i);
-			 int colNum = resource1cellRange2.getFirstColumn();
-			 Cell cell = row.getCell(colNum);
-            int cellValue = getValues(cell);
-           // resource1.add((Integer) cellValue);	
-            int colNum2 = resource1cellRange2.getFirstColumn()+1;
-            Cell cell2 = row.getCell(colNum2);
-            int cellValue2 = getValues(cell2);
-          //  resource2.add((Integer) cellValue2);
-          resourcedata.add(new int [] {cellValue,cellValue2});
-          
-		 }
-		for (int i = patientcellRange2.getFirstRow(); i<=patientcellRange2.getLastRow();i++)
-		{
-			Row row= sheet.getRow(i);
-			int los=0;		
-			int FirstDay=0;			
-			 for (int colNum = patientcellRange2.getFirstColumn(); colNum <= patientcellRange2.getLastColumn(); colNum++) 
-			 {			 	
-	                Cell cell = row.getCell(colNum);
-	                Object cellValue = getValues(cell);	                
-	                if (cellValue != null && ((Integer)cellValue) != 0) 
-	                {	                	
-	                	if (los-((Integer)cellValue)==-1)
-	                	{
-	                		FirstDay=colNum;
-	                		los++;                		
-	                	}
-	                	else 
-	                	{
-	                		los++;
-	                	}              
-	                }                
-	          }
-			 data.add(new int [] {FirstDay,los});
-		}			
-		wb.close();			
-		return capacity;
-	}
 //this method getting values from excel	
-	public static Integer getValues (Cell cell)
-	
-	{
-		if (cell==null)
-		{
-			return 0;
-		}
-		switch (cell.getCellType())
-		{
-		case  Cell.CELL_TYPE_NUMERIC:			
-			return (int) cell.getNumericCellValue();
-	
-		case Cell.CELL_TYPE_STRING:
-			return Integer.parseInt(cell.getStringCellValue());
-		case  Cell.CELL_TYPE_BLANK:		
-			return 0;
-		default:
-			return 0;
-	
-		}		
-	}
+
 	public static void main(String[] args) 
 	{
 
@@ -368,7 +243,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//System.out.print(map);
 		//System.out.print(getALlPatient());
 		try {
-			getData();
+			ExcelRead.getData();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -377,12 +252,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		is.display();
 		ss.setApplet();
 		//ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
-ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
+		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
 	//	ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
 //		ss.runOptSpaceSearch(3);
 //
 		ZonedDateTime startTime = ZonedDateTime.now();
-		Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
+	//	Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
 		
 		ZonedDateTime endTime = ZonedDateTime.now();
 //		System.out.println("DNS 2025 Result " + res);
@@ -397,76 +272,76 @@ ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylis
 		return super.toString() + "PPD"+ "->" + currentDay +  ","  + "Taken->"+ evaluate() +" CanBe->" + maxPatientToTake +" Total->" + (evaluate ()+ maxPatientToTake) ;
 		//return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate() ;
 	}	
-	public Set<Searchable> makeNewStatesOld() 
-	{			
-		//to store new states in states
-		Set<Searchable>  states=  new HashSet<Searchable>();	
-		
-		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );		
-		if (this.currentDay==capacity.size())
-		{		
-			//this.calculateMaxPatToGoal();
-			return states;
-		}
-		// dns 092023 test if we are in the last day.
-		//arraylist of patients who are my new state patients
-		ArrayList <Patient> newStPat= new ArrayList <Patient> ();
-		ArrayList <Patient> nextDyPat= map.get(currentDay+1);
-		ArrayList <Patient> previousDyPat= new ArrayList <Patient> ();	
-		//iterating over statepat which stores information of all the patient based on current state 
-		for (Patient p2 : statePat)
-		{	//patients are staying next day we are adding them to newstpat
-			if(p2.isStayingDay(currentDay+1))
-			{
-				newStPat.add(p2);
-			}								
-		}	
-		//in every new state 
-		PeriodicProblemDay ts= new  PeriodicProblemDay(this,newStPat,currentDay+1);
-		states.add(ts);
-		ts.calculateMaxPatToGoal();
-		if (nextDyPat !=null)
-		{
-			int nextDayCap= nextDayCap();			
-			if (nextDayCap>0)				
-			{
-			List<Patient> nxtDyPatIter = nextDyPat;
-			List<List<Patient>> nextDayComb=new ArrayList <>();
-			
-			try {	
-				for (int i=1;i<=nextDayCap;i++)
-				{
-				List<List<Patient>> combinations = Comb.createCombinations(nxtDyPatIter, i);
-				nextDayComb.addAll(combinations);
-	                
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			for (List<Patient> ndi :nextDayComb)
-			{
-				ArrayList <Patient> allNewPat= new ArrayList <Patient> (newStPat);
-				for (Patient i : ndi )
-			{					
-				allNewPat.add(i);
-			}
-				PeriodicProblemDay ps= new  PeriodicProblemDay(this,allNewPat,currentDay+1);
-				states.add(ps);
-				//states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));		
-				ps.calculateMaxPatToGoal();
-			}
-		}
-		
-		}	
-		
-		return states;
-	}
+//	public Set<Searchable> makeNewStatesOld() 
+//	{			
+//		//to store new states in states
+//		Set<Searchable>  states=  new HashSet<Searchable>();	
+//		
+//		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );		
+//		if (this.currentDay==capacity.size())
+//		{		
+//			//this.calculateMaxPatToGoal();
+//			return states;
+//		}
+//		// dns 092023 test if we are in the last day.
+//		//arraylist of patients who are my new state patients
+//		ArrayList <Patient> newStPat= new ArrayList <Patient> ();
+//		ArrayList <Patient> nextDyPat= map.get(currentDay+1);
+//		ArrayList <Patient> previousDyPat= new ArrayList <Patient> ();	
+//		//iterating over statepat which stores information of all the patient based on current state 
+//		for (Patient p2 : statePat)
+//		{	//patients are staying next day we are adding them to newstpat
+//			if(p2.isStayingDay(currentDay+1))
+//			{
+//				newStPat.add(p2);
+//			}								
+//		}	
+//		//in every new state 
+//		PeriodicProblemDay ts= new  PeriodicProblemDay(this,newStPat,currentDay+1);
+//		states.add(ts);
+//		ts.calculateMaxPatToGoal();
+//		if (nextDyPat !=null)
+//		{
+//			int nextDayCap= nextDayCap();			
+//			if (nextDayCap>0)				
+//			{
+//			List<Patient> nxtDyPatIter = nextDyPat;
+//			List<List<Patient>> nextDayComb=new ArrayList <>();
+//			
+//			try {	
+//				for (int i=1;i<=nextDayCap;i++)
+//				{
+//				List<List<Patient>> combinations = Comb.createCombinations(nxtDyPatIter, i);
+//				nextDayComb.addAll(combinations);
+//	                
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			for (List<Patient> ndi :nextDayComb)
+//			{
+//				ArrayList <Patient> allNewPat= new ArrayList <Patient> (newStPat);
+//				for (Patient i : ndi )
+//			{					
+//				allNewPat.add(i);
+//			}
+//				PeriodicProblemDay ps= new  PeriodicProblemDay(this,allNewPat,currentDay+1);
+//				states.add(ps);
+//				//states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));		
+//				ps.calculateMaxPatToGoal();
+//			}
+//		}
+//		
+//		}	
+//		
+//		return states;
+//	}
 	public Set<Searchable> makeNewStates() 
 	{			
 		//to store new states in states
 		Set<Searchable>  states=  new HashSet<Searchable>();	
 		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );		
-		if (this.currentDay==capacity.size())
+		if (this.currentDay==capacitylist.get(0).size())
 		{		
 			//this.calculateMaxPatToGoal();
 			return states;
@@ -527,7 +402,8 @@ ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylis
 
 				if (!ps.isNotFeasible2())
 				{
-				states.add(ps);}
+				states.add(ps);
+				}
 			ps.calculateMaxPatToGoal();
 
 					
@@ -664,7 +540,7 @@ class PeriodicDayPanel extends JPanel
 		Object [] modelPat=getAllPatient().toArray();
 		ArrayList <Integer>  daysList= new ArrayList();
 		daysList.add(resLabel);
-		for(int i=1;i<=capacity.size();i++) {
+		for(int i=1;i<=capacitylist.get(0).size();i++) {
 			daysList.add(i);
 		}
 		Object [] columns = daysList.toArray();		
