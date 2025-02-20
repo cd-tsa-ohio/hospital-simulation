@@ -382,7 +382,7 @@ ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylis
 //		ss.runOptSpaceSearch(3);
 //
 		ZonedDateTime startTime = ZonedDateTime.now();
-		Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
+//		Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
 		
 		ZonedDateTime endTime = ZonedDateTime.now();
 //		System.out.println("DNS 2025 Result " + res);
