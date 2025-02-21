@@ -257,7 +257,10 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //		ss.runOptSpaceSearch(3);
 //
 		ZonedDateTime startTime = ZonedDateTime.now();
+
+
 	//	Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
+
 		
 		ZonedDateTime endTime = ZonedDateTime.now();
 //		System.out.println("DNS 2025 Result " + res);
