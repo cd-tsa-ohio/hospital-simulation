@@ -3,6 +3,7 @@ package edu.ohiou.dynamic;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,69 +17,6 @@ public class MaxCapacityWithoutCurrent implements HeuristicFunction {
 	{
 		  this.state = (PeriodicProblemDay)state;
 	}
-
-
-	public double evaluate2() 
-	{
-		double result=0;
-		if (state.canBeGoal()==true)
-		{
-		return result;	
-		}
-		int futureDays=state.currentDay+1;//=
-		
-		int cap=0;
-		int futureDayPat=0;
-		ArrayList<Patient> lastDayPat=new ArrayList <Patient>();
-		ArrayList<Integer> evaluatedPat=new ArrayList <Integer>();
-		ArrayList<Patient> prevDaysPat=new ArrayList <Patient>();
-		while (futureDays<=state.capacity.size())  // should this be  <= to include the last day
-		{
-			
-			int patforNextDay=0;
-			int count=0;
-		
-			{
-				
-				ArrayList<Patient> patients=state.map.get(futureDays);
-				
-				if(state.map.get(futureDays)!=null)
-				{
-					lastDayPat.addAll(patients);
-				}
-			    for (Patient patient : lastDayPat) {
-	
-			      if(  patient.isStayingDay(futureDays))//patient staying next day we get it
-			      {
-			    	  count=count+1; 
-			      }
-			    }        
-			
-			    cap=state.capacity.get(futureDays-1);;	
-			    int ignoredPat=Math.max((count-cap), 0);
-			    evaluatedPat.add(ignoredPat);
-			    
-			 //   result=result+Math.min(cap, count);
-			
-			futureDays++;				
-		}
-			
-			for (int i=state.currentDay-1;i>=0;i--)
-			{
-				prevDaysPat.addAll(prevDaysPat);
-			}
-			int totalPrevDayPat=prevDaysPat.size();
-			//int currPat= state.combinedSet.size();
-			Object [] allPat=state.getAllPatient().toArray();
-			int totalPat=allPat.length;
-			result=(totalPat-totalPrevDayPat)-(Collections.max(evaluatedPat));
-			//result=
-	}
-		return result;
-	}
-	
-	
-	
 	public double evaluate() 
 	{
 		double result=0;
@@ -86,41 +24,39 @@ public class MaxCapacityWithoutCurrent implements HeuristicFunction {
 		{
 		return result;	
 		}
-		int futureDays=state.currentDay+1;//=2
-		int cap=0;
-		int futureDayPat=0;
-		
-		ArrayList<Patient> lastDayPat=new ArrayList <Patient>();
-		while (futureDays<=state.capacity.size())  // should this be  <= to include the last day
-		{
-			int takenCapacity = 0;
-			int patforNextDay=0;
-			int count=0;
-		
-			{
-				ArrayList<Patient> patients=state.map.get(futureDays);
 				
+		
+		for (int res=0; res<state.capacitylist.size();res++) {//going over resources
+			int futureDays=state.currentDay+1;
+			int cap=0;
+			int futureDayPat=0;
+			double prevResult=result;	
+			ArrayList<Patient> lastDayPat=new ArrayList <Patient>();
+		while (futureDays<=state.capacitylist.get(0).size())  // should this be  <= to include the last day
+		{
+			//int takenCapacity = 0;
+			int patforNextDay=0;
+			int count=0;					
+				ArrayList<Patient> patients=state.map.get(futureDays);				
 				if(state.map.get(futureDays)!=null)
 				{
 					lastDayPat.addAll(patients);
 				}
 			    for (Patient patient : lastDayPat) {
-	
-			      if(  patient.isStayingDay(futureDays))//patient staying next day we get it
+			      if(  patient.isStayingDay(futureDays)&& patient.resources.get(res)==1)//patient staying next day we get it
 			      {
 			    	  count=count+1; 
 			      }
-			    }        
+			    }        			
+			    cap=state.capacitylist.get(res).get(futureDays-1);		
+			    //cap=state.capacitylist.get(count).get(futureDays-1);
+			    result = Math.max(result,  Math.max(0, count-cap));				    
+			futureDays++;					
 			
-			    cap=state.capacity.get(futureDays-1);
-			    
-			    result = Math.max(result,  Math.max(0, count-cap));
-			    
-//			    result=result+Math.min(cap, count);
-			
-			futureDays++;				
-		}
 	}
+		result=Math.max(result, prevResult);
+		
+		}
 		int futurePat = state.futurePatientCount();
 		return futurePat - result;
 	}
