@@ -2,49 +2,36 @@ import gurobipy as gp
 import openpyxl
 from gurobipy import GRB
 from decouple import config
-
+import ou_file_utils as ofu
 import GetData
-#this is model 1
-#this is one resource one region model
-#this model is modified to read from data folder (orginal model was ProposalModel)
-#the model is also further modified to read from dataframe
-# DATA_FOLDER = config('GUR_DATA_FOLDER')
-# # sheetname=input("write file name: ")
-# # sheet_name=input("write sheet name: ")
-# # df1=pd.read_excel(DATA_FOLDER+sheetname,sheet_name=sheet_name)
-# # capacityrow= df1[df1['patient']=='capacity'].index[0]
-# # #input number of days
-# # numDays=int(input("Enter number of days"))
-# # capacity = df1.iloc[capacityrow, 1:numDays+2]
-# # print(capacity)
-# # blank_line_index = df1[df1['patient'].isna()].index[0]
-# # x=[]
-# # for values in range (1,blank_line_index+1):
-# #     patientDataRow= df1[df1['patient']==values].index[0]
-# #     patientData = df1.iloc[patientDataRow, 1:numDays+2]
-# #     x.append(patientData)
-# # print (x)
-x,capacity=GetData.getData()
+from Results import writeResults
+x, totalCaplist, totalResourcelist,file_path= GetData.getData(ofu.getFile())
 model=gp.Model("OptimsationModel")
-
-patients=range(1,len(x))
-days=range(1,len(capacity))
-
-#Variables
-y= model.addVars(patients,vtype=GRB.BINARY,name='y')
-
-z=model.addVars(patients,days,vtype=GRB.INTEGER,lb=0,name="z")
-
+patients=range(1, len(x))
+y = {}
+z={}
+capacityEveryDay={}
+for region in range(len(x)):  # Iterate over regions (outer list)
+    for patient in range(0,len(x[region])):
+        y[region, patient] = model.addVar(vtype=GRB.BINARY, name=f"Region_{region} Patient_{patient}")
 #Objective
-totalPatiens=y.sum()
-model.setObjective(totalPatiens,GRB.MAXIMIZE)
+totalPatients = gp.quicksum(var for var in y.values())
+model.setObjective(totalPatients,GRB.MAXIMIZE)
 
 #Contranints
-for i in days:
-     model.addConstr(gp.quicksum(z[m,i] for m in patients)<= capacity[i],f"capacity_{i}")
-for i in days:
-    for m in patients:
-        model.addConstr(z[m,i]==x[m][i]*y[m], f"z_{m}_{i}")
+#for i in days:
+for r in range(len(x)):
+            for res in range( len(totalCaplist[r])):
+                for days in range (1,len(totalCaplist[r][res])+1):#Iterate over days
+                    for re in range (0,len(totalResourcelist[r])):
+                                    
+         #model.addConstr(gp.quicksum(z[m,i] for m in patients)<= capacity[i],f"capacity_{i}")
+                        model.addConstr(gp.quicksum(y[r, m] * x[r][m][days]*totalResourcelist[r][re][m] for m in range(len(x[r])))<=totalCaplist[r][res][days-1])
+
+
+model.update()
 model.optimize()
+for var in y.values():
+   print(f"{var.VarName} = {var.x}")
 
-
+writeResults(y, z,capacityEveryDay, file_path)
