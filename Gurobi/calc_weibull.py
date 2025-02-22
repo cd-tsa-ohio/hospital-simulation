@@ -12,6 +12,6 @@ for i in range (5):
 
 
 
-#for i in range(10):
-#    value = np.random.weibull(k) * lam
-#    print(value)
+for i in range(100):
+    value = np.random.weibull(k) * lam
+    print(value)

@@ -30,4 +30,10 @@ def getData(file_path):
 if __name__ == "__main__":
     gd = getData(ofu.getFile())
     print (type(gd))
-    print(gd)
+    print(gd[2])
+    rl_df = pd.DataFrame(gd[2])
+    transp = rl_df.transpose()
+    print('original')
+    print (rl_df)
+    print('transposed')
+    print(transp)
