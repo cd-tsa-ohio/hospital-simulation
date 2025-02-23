@@ -126,7 +126,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		{
 			//retrieving elements from data the 0 index their arrival day, their lenght of stay by 1
 			  ArrayList<Integer> resReq =new ArrayList<Integer> ();
-				for(int k=0;k<2;k++)
+				for(int k=0;k<capacitylist.size();k++)
 				{
 					resReq.add(resourcedata.get(i)[k]);					
 				}
