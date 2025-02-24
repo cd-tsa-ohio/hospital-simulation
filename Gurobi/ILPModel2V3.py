@@ -44,7 +44,6 @@ for r2 in range(len(x)):
         for m in range(len(x[r2])):
             model.addConstr(gp.quicksum(z[r, r2, m] for r in range(len(x)) if r!=r2)<=1-y[r2,m])
 
-
 model.update()
 model.optimize()
 

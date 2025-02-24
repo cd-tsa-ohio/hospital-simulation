@@ -21,17 +21,14 @@ model.setObjective(totalPatients,GRB.MAXIMIZE)
 #Contranints
 #for i in days:
 for r in range(len(x)):
-            for res in range( len(totalCaplist[r])):
-                for days in range (1,len(totalCaplist[r][res])+1):#Iterate over days
-                    for re in range (0,len(totalResourcelist[r])):
-                                    
-         #model.addConstr(gp.quicksum(z[m,i] for m in patients)<= capacity[i],f"capacity_{i}")
-                        model.addConstr(gp.quicksum(y[r, m] * x[r][m][days]*totalResourcelist[r][re][m] for m in range(len(x[r])))<=totalCaplist[r][res][days-1])
+   for res in range( len(totalCaplist[r])):
+       for days in range (1,len(totalCaplist[r][res])+1):#Iterate over days
+           for re in range (0,len(totalResourcelist[r])):                                          
+              model.addConstr(gp.quicksum(y[r, m] * x[r][m][days]*totalResourcelist[r][re][m] for m in range(len(x[r])))<=totalCaplist[r][res][days-1])
 
 
 model.update()
 model.optimize()
 for var in y.values():
    print(f"{var.VarName} = {var.x}")
-
 writeResults(y, z,capacityEveryDay, file_path)

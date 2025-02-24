@@ -4,7 +4,7 @@ from openpyxl.styles import PatternFill
 from decouple import config
 import tkinter as tk
 from tkinter import filedialog
-import xlsxwriter
+#import xlsxwriter
 
 def writeResults(y:dict, z:dict,capacityEveryDay:dict, file_path):
     df1 = pd.read_excel(file_path, sheet_name=None)
@@ -12,7 +12,7 @@ def writeResults(y:dict, z:dict,capacityEveryDay:dict, file_path):
     counterT=0
     newFileName = "answers.xlsx"
     resNumber=0
-    with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer:
+    with pd.ExcelWriter(file_path, engine='openpyxl',mode='a',if_sheet_exists='overlay') as writer:
         for sheet_name, values in df1.items():
             df2 = pd.DataFrame(values)
             df2["PatientAccepted"] = None
@@ -26,7 +26,6 @@ def writeResults(y:dict, z:dict,capacityEveryDay:dict, file_path):
                     countA=countA+1
             for key, var in capacityEveryDay.items():        
                 if key[0]==counterA:
-                    
                     if(key[1]==resNumber):
                         df2.at[CountCA,'CapacityAllocatedRes'+str(key[1])] = var.X
                         CountCA=CountCA+1
@@ -36,12 +35,14 @@ def writeResults(y:dict, z:dict,capacityEveryDay:dict, file_path):
                         CountCA=CountCA+1
                     resNumber=key[1]
             counterA = counterA + 1
+           # if (len(capacityEveryDay)>0):
+                
+                
             for key, var in z.items():
                 if key[1] == counterT:
                     if var.X==1:
                         df2.at[countT, 'SuccesfulTransferto'] = key[0]+1
                         df2.at[countT,'SuccefulTansferPatientNumber']=key[2]+1
                         countT = countT + 1
-            counterT = counterT + 1
-            
+            counterT = counterT + 1          
             df2.to_excel(writer, sheet_name=sheet_name, index=False)
