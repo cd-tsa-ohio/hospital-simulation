@@ -16,19 +16,19 @@ def weibullparameters (estimatedparams, mean, std):
 
 
 stats = {0 : { 10 : {'initialguess' : (1.5,4),'mean': 3.6, 'stdev' : 4.1},
-               1 : {'initialguess' : (1.5,13),'mean': 13.2, 'stdev' : 14.0},
-               11 : {'initialguess' : (1.5,18),'mean': 17.5, 'stdev' : 11.8}
+               1 : {'initialguess' : (1.5,13),'mean': 12.7, 'stdev' : 14.5},
+               11 : {'initialguess' : (1.5,18),'mean': 17.8, 'stdev' : 14.0}
                 },
          1 : { 10 : {'initialguess' : (1.5,6),'mean': 5.9, 'stdev' : 5.9},
-               1 : {'initialguess' : (1.5,15),'mean': 15.4, 'stdev' : 14.2},
-               11 : {'initialguess' : (1.5,20),'mean': 19.5, 'stdev' : 14.3}
+               1 : {'initialguess' : (1.5,14),'mean': 13.6, 'stdev' : 13.8},
+               11 : {'initialguess' : (1.5,17),'mean': 17.0, 'stdev' : 12.1}
                 },
          2 :{10 : {'initialguess' : (1.5,8),'mean': 8.3, 'stdev' : 7.7},
-              1 : {'initialguess' : (1.5,14),'mean': 13.6, 'stdev' : 13.8},
-               11 : {'initialguess' : (1.5,17),'mean': 17.1, 'stdev' : 13.5}},
+              1 : {'initialguess' : (1.5,11),'mean': 11.4, 'stdev' : 11.4},
+               11 : {'initialguess' : (1.5,15),'mean': 14.9, 'stdev' : 10.2}},
          3: {10 : {'initialguess' : (1.5,10),'mean': 10, 'stdev' : 9.4},
-               1 : {'initialguess' : (1.5,11),'mean': 11.4, 'stdev' : 11.4},
-               11 : {'initialguess' : (1.5,13),'mean': 12.6, 'stdev' : 10.8}}
+               1 : {'initialguess' : (1.5,5),'mean': 5.0, 'stdev' : 5.9},
+               11 : {'initialguess' : (1.5,11),'mean': 11.3, 'stdev' : 8.9}}
          
         
         }
