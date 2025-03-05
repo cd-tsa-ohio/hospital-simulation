@@ -230,7 +230,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//9/24/ need to look at this 
 		//gs.currentDay = 6;
 		SpaceSearcher ss = null;
-		String searchString = "BLID";
+		String searchString = "BLIND";
 		
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
@@ -481,18 +481,27 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 			 Component component = super.getTableCellRendererComponent
 					 (table, value, isSelected, hasFocus, row, column);
-			 // do not color resource column
-//			 if (column ==1) {
-//				 component.setBackground(Color.white);
-//				 return component;
-//			 }
+			 // column shift when we have more than 1 resource
+			 int multiResourceShift = 0;
+			 if (capacitylist.size() > 1) {
+				 multiResourceShift = 1;
+			 }			 // do not color resource column
+			 if (column ==0) {
+				 component.setBackground(Color.white);
+				 return component;
+			 }
 			 int number = 0;
+
 			 try {
 				 number = (Integer) value;
 			 } catch (Exception e) {
 //				 System.out.println("Never leave the empty catch clause, value is " + value);
 			 }
 			 // color yellow patients and days when resource is required
+//			 if (column == 1) {
+//				 int a = 2;
+//				 component.setBackground(Color.blue);
+//			 }
 			 if ( number == 1) { 
 				 component.setBackground(Color.yellow);
 			 }
@@ -509,26 +518,28 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				 component.setBackground(Color.green);
 			 }
 			 else {
-				 // color eerlier not-accepted patients red
+				 // color earlier not-accepted patients red
 				 if (number==1 && p.arrivalDay<=currentDay) {
 					 component.setBackground(Color.red);
 				 }
 				 else {
 					 // color the next day patient choice cyan
-					 if (number==1 && (column==currentDay+2)) {
+					 if (number==1 && (column==currentDay+1 + multiResourceShift)) {
 						 component.setBackground(Color.cyan);
 					 }
 				 }
 			 }
 			 // make different shades for different resources
+			 if (multiResourceShift == 1) {
 			 int numResources = capacitylist.size();
 			 int i = row % numResources;
 			 int colorLevel = 255 - i * 10;
 			 if (number == 0 || column == 1) { 
 				 component.setBackground(new Color (colorLevel, colorLevel, colorLevel));
 			 }
+			 }
 			 // to make current day stand out
-			 if (number == 0 && currentDay == column - 1) {
+			 if (number == 0 && currentDay == column - multiResourceShift) {
 				 component.setBackground(Color.lightGray);
 			 }
 				 
@@ -542,7 +553,9 @@ class PeriodicDayPanel extends JPanel
 	{
 		Object [] modelPat=getAllPatient().toArray();
 		ArrayList <Integer>  daysList= new ArrayList();
-		daysList.add(resLabel);
+		if (capacitylist.size() > 1 ) {
+			daysList.add(resLabel);
+		}
 		for(int i=1;i<=capacitylist.get(0).size();i++) {
 			daysList.add(i);
 		}
@@ -710,7 +723,7 @@ class Patient
 		//return (  name +" <arr " + arrivalDay + ",los " + los +">"+"res1"+">"+resource1+"res2"+">"+resource2);
 		//for (int i = 0; i < resources.size(); i++) {
 			int resource1 = resources.get(0);
-	        int resource2 =resources.get(1);
+//	        int resource2 =resources.get(1);
 			
 		//}
 		return (  name +" <arr " + arrivalDay + ",los " + los +","+"R:"+ resources + ">");
