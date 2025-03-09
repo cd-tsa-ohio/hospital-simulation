@@ -230,7 +230,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		//9/24/ need to look at this 
 		//gs.currentDay = 6;
 		SpaceSearcher ss = null;
-		String searchString = "BLIND";
+		String searchString = "BLID";
 		
 		if (searchString .equalsIgnoreCase("BLIND")) {
 			ss = new BlindSearcher (is, gs);
@@ -249,7 +249,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			e.printStackTrace();
 		}
 		is.createPatients();
-		is.display();
+//		is.display();
 		ss.setApplet();
 		//ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
 		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
@@ -498,10 +498,6 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //				 System.out.println("Never leave the empty catch clause, value is " + value);
 			 }
 			 // color yellow patients and days when resource is required
-//			 if (column == 1) {
-//				 int a = 2;
-//				 component.setBackground(Color.blue);
-//			 }
 			 if ( number == 1) { 
 				 component.setBackground(Color.yellow);
 			 }
@@ -531,12 +527,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			 }
 			 // make different shades for different resources
 			 if (multiResourceShift == 1) {
-			 int numResources = capacitylist.size();
-			 int i = row % numResources;
-			 int colorLevel = 255 - i * 10;
-			 if (number == 0 || column == 1) { 
-				 component.setBackground(new Color (colorLevel, colorLevel, colorLevel));
-			 }
+				 int numResources = capacitylist.size();
+				 int i = row % numResources;
+				 int colorLevel = 255 - i * 10;
+				 if (number == 0 || column == 1) { 
+					 component.setBackground(new Color (colorLevel, colorLevel, colorLevel));
+				 }
 			 }
 			 // to make current day stand out
 			 if (number == 0 && currentDay == column - multiResourceShift) {
