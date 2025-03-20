@@ -541,6 +541,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		 }
 	}
 	
+	// code for header renderer is from https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
+	
 	public class SimpleHeaderRenderer extends JLabel implements TableCellRenderer {
 		 
 	    public SimpleHeaderRenderer() {
