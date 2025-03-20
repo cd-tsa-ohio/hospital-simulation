@@ -13,6 +13,7 @@ import java.util.*;
 import javax.swing.*;
 
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 
@@ -539,6 +540,33 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			 return component;
 		 }
 	}
+	
+	public class SimpleHeaderRenderer extends JLabel implements TableCellRenderer {
+		 
+	    public SimpleHeaderRenderer() {
+	       
+	    }
+	 
+	    @Override
+	    public Component getTableCellRendererComponent(JTable table, Object value,
+	            boolean isSelected, boolean hasFocus, int row, int column) {
+	    	int number = 0;
+			try {
+				number = Integer.parseInt((String) value);
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+			}
+	    	if (number == resLabel) {
+	    		setText("Resource");
+	    	} else {
+	    		setText(value.toString());
+	    		
+	    	}
+	        return this;
+	    }
+	 
+	}
 
 class PeriodicDayPanel extends JPanel 
 {
@@ -574,6 +602,7 @@ class PeriodicDayPanel extends JPanel
 		problemTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
 		problemTable.setDefaultRenderer(String.class, new PDCellRenderer());
 		problemTable.setDefaultRenderer(Object.class,new PDCellRenderer());
+		problemTable.getTableHeader().setDefaultRenderer(new SimpleHeaderRenderer());
 	//	ModelTable stateTable = new ModelTable(stateTM);
 		//stateTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
 		boolean  useSplitPane = false;
