@@ -238,9 +238,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			e.printStackTrace();
 		}
 		is.createPatients();
-//		is.display();
+		is.display();
 		ss.setApplet();
-		//ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
+
 		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
 		//ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
 	//ss.runOptSpaceSearch();
@@ -248,7 +248,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		ZonedDateTime startTime = ZonedDateTime.now();
 
 
-	//	Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
+//		Searchable res = ss.runSpaceSearch(SpaceSearcher.REACH_GOAL);
 
 		
 		ZonedDateTime endTime = ZonedDateTime.now();
@@ -264,75 +264,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		return super.toString() + "PPD"+ "->" + currentDay +  ","  + "Taken->"+ evaluate() +" CanBe->" + maxPatientToTake +" Total->" + (evaluate ()+ maxPatientToTake) ;
 		//return super.toString() + "PPD"+ "->" + currentDay + ",pat " + statePat + ","  + evaluate() ;
 	}	
-//	public Set<Searchable> makeNewStatesOld() 
-//	{			
-//		//to store new states in states
-//		Set<Searchable>  states=  new HashSet<Searchable>();	
-//		
-//		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );		
-//		if (this.currentDay==capacity.size())
-//		{		
-//			//this.calculateMaxPatToGoal();
-//			return states;
-//		}
-//		// dns 092023 test if we are in the last day.
-//		//arraylist of patients who are my new state patients
-//		ArrayList <Patient> newStPat= new ArrayList <Patient> ();
-//		ArrayList <Patient> nextDyPat= map.get(currentDay+1);
-//		ArrayList <Patient> previousDyPat= new ArrayList <Patient> ();	
-//		//iterating over statepat which stores information of all the patient based on current state 
-//		for (Patient p2 : statePat)
-//		{	//patients are staying next day we are adding them to newstpat
-//			if(p2.isStayingDay(currentDay+1))
-//			{
-//				newStPat.add(p2);
-//			}								
-//		}	
-//		//in every new state 
-//		PeriodicProblemDay ts= new  PeriodicProblemDay(this,newStPat,currentDay+1);
-//		states.add(ts);
-//		ts.calculateMaxPatToGoal();
-//		if (nextDyPat !=null)
-//		{
-//			int nextDayCap= nextDayCap();			
-//			if (nextDayCap>0)				
-//			{
-//			List<Patient> nxtDyPatIter = nextDyPat;
-//			List<List<Patient>> nextDayComb=new ArrayList <>();
-//			
-//			try {	
-//				for (int i=1;i<=nextDayCap;i++)
-//				{
-//				List<List<Patient>> combinations = Comb.createCombinations(nxtDyPatIter, i);
-//				nextDayComb.addAll(combinations);
-//	                
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			for (List<Patient> ndi :nextDayComb)
-//			{
-//				ArrayList <Patient> allNewPat= new ArrayList <Patient> (newStPat);
-//				for (Patient i : ndi )
-//			{					
-//				allNewPat.add(i);
-//			}
-//				PeriodicProblemDay ps= new  PeriodicProblemDay(this,allNewPat,currentDay+1);
-//				states.add(ps);
-//				//states.add( new PeriodicProblemDay(this,allNewPat,currentDay+1));		
-//				ps.calculateMaxPatToGoal();
-//			}
-//		}
-//		
-//		}	
-//		
-//		return states;
-//	}
+
 	public Set<Searchable> makeNewStates() 
 	{			
 		//to store new states in states
 		Set<Searchable>  states=  new HashSet<Searchable>();	
-		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );		
+//		System.out.println("The current day is "+ this.toString()+" ..."+ currentDay );		
 		if (this.currentDay==capacitylist.get(0).size())
 		{		
 			//this.calculateMaxPatToGoal();
@@ -363,9 +300,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			{
 			List<Patient> nxtDyPatIter = nextDyPat;
 			List<List<Patient>> nextDayComb=new ArrayList <>();
-			
+			int treshold =Math.max(nxtDyPatIter.size() - 5,0);
 			try {	
-				for (int i=1;i<=nxtDyPatIter.size();i++)
+				for (int i=treshold;i<=nxtDyPatIter.size();i++)
 				{
 				List<List<Patient>> combinations = Comb.createCombinations(nxtDyPatIter, i);
 				nextDayComb.addAll(combinations);
