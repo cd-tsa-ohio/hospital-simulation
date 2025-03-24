@@ -104,7 +104,13 @@ public static void  getData ( ) throws IOException
 			return (int) cell.getNumericCellValue();
 	
 		case Cell.CELL_TYPE_STRING:
-			return Integer.parseInt(cell.getStringCellValue());
+			try {
+				return Integer.parseInt(cell.getStringCellValue());
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return 0;
+			}
 		case  Cell.CELL_TYPE_BLANK:		
 			return 0;
 		default:
