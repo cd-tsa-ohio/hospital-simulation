@@ -6,14 +6,14 @@ from Results import writeResults
 import ou_file_utils as ofu
 #Adding multiple resource Constraint Latest after 9/20
 #Parameters
-def model3( totalCapacity, periodlength):
+def model3( totalCapacity, periodlength,fp):
     model = gp.Model("OptimsationModel")
-    x, totalCaplist, totalResourcelist,file_path= GetData.getData(ofu.getFile())
+    x, totalCaplist, totalResourcelist,file_path= GetData.getData(fp)
 
     #input parameter
     #totalCapacity=int(input("Enter global capacity: "))
     #periodlength=int(input("enter length of each period:"))
-    periods=int(len(totalCaplist[0][0])/int(periodlength))
+    periods=math.ceil(len(totalCaplist[0][0])/int(periodlength))
     #input parameter
 
     #Decision Variables
@@ -59,4 +59,12 @@ def model3( totalCapacity, periodlength):
         print(f"{var.VarName} = {var.x}")
     writeResults(y, z,capacityEveryDay, file_path)
 if __name__== "__main__":
-    model3(3,1)
+    fp =ofu.getFile()
+    model3(17,1,fp)
+    #fp_list=[]
+    #cap_list=[10,12,14,16]
+    #period_list=[5,10,15]
+    #for f in fp_list:
+     #   for c in cap_list:
+      #      for p in period_list:   
+       #         model3(c,p,f)

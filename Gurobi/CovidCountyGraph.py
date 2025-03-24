@@ -7,21 +7,27 @@ import time
 from plotly.graph_objs import Bar, Layout
 from plotly import offline
 
+def createGraph(file_name):
+    df=pd.read_excel(file_name,MaxDate,MinDate)
 
-df=pd.read_excel(ofu.getFile())
+    
+    
+    #y_axis_config = {'title': 'Number of Cases'}
+    #x_axis_config = {'title': 'Date'}
+    #x_values = Count
+    #y_values = Date
 
-Date=df["Date"]
-Count=df["Count"]
-print(Count)
-#y_axis_config = {'title': 'Number of Cases'}
-#x_axis_config = {'title': 'Date'}
-#x_values = Count
-#y_values = Date
+    new_df=df[(df['Date'] >=MaxDate ) & (df['Date'] <=MinDate )]
+    Date=new_df["Date"]
+    Count=new_df["DailyCount"]
+    data = [Bar (x=Date, y=Count)]
+    my_layout = Layout(title=f'County Coronavirus Cases per day')
+    offline.plot({'data':data, 'layout':my_layout}, filename=f'{file_name} Countycasesperday.html')
 
-data = [Bar (x=Date, y=Count)]
-my_layout = Layout(title='County Coronavirus Cases per day')
-offline.plot({'data':data, 'layout':my_layout}, filename='Countycasesperday.html')
-
-
+if __name__=="__main__":
+   file_name=ofu.getFile()
+   MaxDate='2020-09-01'
+   MinDate='2021-01-31'
+   createGraph(file_name,MaxDate,MinDate)
 
 

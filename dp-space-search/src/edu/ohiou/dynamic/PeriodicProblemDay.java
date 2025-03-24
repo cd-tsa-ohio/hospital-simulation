@@ -28,7 +28,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	//int NextDayCap;
 	int currentDay;
-	static String XLSX_FOLDER;
+	//static String XLSX_FOLDER;
 	//static int data[][]= {{1,3},{1,2},{2,2},{3,1}};
 	static List<int[]> data = new ArrayList<>();	  
     static List<List<Integer>> capacitylist = new ArrayList<>();  
@@ -112,16 +112,11 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	public Comparator getComparator() {
 		return new PDComparator();
 	}
-
-	//this need to be static
-	
 	public void  createPatients ()
 	
-	{
-	
+	{	
 		for (int i=0;i<data.size();i++) 
 		{
-			//retrieving elements from data the 0 index their arrival day, their lenght of stay by 1
 			  ArrayList<Integer> resReq =new ArrayList<Integer> ();
 				for(int k=0;k<capacitylist.size();k++)
 				{
@@ -130,16 +125,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			ArrayList<Patient> pat=map.get(data.get(i)[0]);	
 			if (pat==null)
 			{	
-				//we create a patient with arrival day and los, and put that in the map with the key as arrival day
-				//ArrayList<Patient> Npat=new ArrayList<Patient> ();
 				ArrayList<Patient> Npat=new ArrayList<Patient> ();
-				//Npat.add(new Patient(data.get(i)[0],data.get(i)[1]));
 				Npat.add(new Patient(data.get(i)[0],data.get(i)[1],resReq));		
 				map.put(data.get(i)[0],Npat);
 			}
 			else
 			{	
-				//otherwise we create new patient add this into the existing patients who arrive on that day
 				pat.add(new Patient(data.get(i)[0],data.get(i)[1],resReq));
 			}
 
@@ -207,7 +198,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 	private int nextDayCap2(int resource ,int day,int num)
 
 	{		
-		int capacityAvailable=capacitylist.get(resource).get(day) - num;
+		int capacityAvailable=capacitylist.get(resource).get(day-1) - num;
 		return capacityAvailable  ;
 		
 	}
@@ -250,8 +241,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		ss.setApplet();
 		//ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacity));
 		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));
-	//	ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
-//		ss.runOptSpaceSearch(3);
+		//ss.setSearchOrder(SpaceSearcher.BEST_FIRST);
+	//ss.runOptSpaceSearch();
 //
 		ZonedDateTime startTime = ZonedDateTime.now();
 
@@ -385,20 +376,16 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			for (List<Patient> ndi :nextDayComb)
 			{
 				ArrayList <Patient> allNewPat= new ArrayList <Patient> (newStPat);
-			//	if (isNotFeasible2(ndi)==false)
+		
 				{
-			//	for (Patient i : ndi )
-			{					
-			//	allNewPat.add(i);
-			allNewPat.addAll(ndi); // uncomment this
-			}
+			
+				
+			allNewPat.addAll(ndi); 
+			
 				}
 				PeriodicProblemDay ps= new  PeriodicProblemDay(this,allNewPat,currentDay+1);
 
-//				if (!ps.isNotFeasible2(ndi)) { // uncomment this
-				//states.add(ps);
-//				}                               // uncomment this
-			//ps.calculateMaxPatToGoal();
+
 
 				if (!ps.isNotFeasible2())
 				{
@@ -467,22 +454,18 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 //classes	
 	
 	class PDCellRenderer extends DefaultTableCellRenderer  {
-
 		 public PDCellRenderer() {
-			// TODO Auto-generated constructor stub
 		}
 		 public Component getTableCellRendererComponent(
 				 JTable table, Object value,
 				 boolean isSelected, boolean hasFocus,
 				 int row, int column) {
-
 			 Component component = super.getTableCellRendererComponent
 					 (table, value, isSelected, hasFocus, row, column);
-			 // column shift when we have more than 1 resource
 			 int multiResourceShift = 0;
 			 if (capacitylist.size() > 1) {
 				 multiResourceShift = 1;
-			 }			 // do not color resource column
+			 }
 			 if (column ==0) {
 				 component.setBackground(Color.white);
 				 return component;
@@ -492,9 +475,9 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			 try {
 				 number = (Integer) value;
 			 } catch (Exception e) {
-//				 System.out.println("Never leave the empty catch clause, value is " + value);
+
 			 }
-			 // color yellow patients and days when resource is required
+
 			 if ( number == 1) { 
 				 component.setBackground(Color.yellow);
 			 }
@@ -506,23 +489,19 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 				 PatientCopy pc = (PatientCopy) p;
 				 p = pc.patient;
 			 }
-			 // color accepted patients green
 			 if (number==1 && acceptedPatients.contains(p) ) {
 				 component.setBackground(Color.green);
 			 }
 			 else {
-				 // color earlier not-accepted patients red
 				 if (number==1 && p.arrivalDay<=currentDay) {
 					 component.setBackground(Color.red);
 				 }
 				 else {
-					 // color the next day patient choice cyan
 					 if (number==1 && (column==currentDay+1 + multiResourceShift)) {
 						 component.setBackground(Color.cyan);
 					 }
 				 }
 			 }
-			 // make different shades for different resources
 			 if (multiResourceShift == 1) {
 				 int numResources = capacitylist.size();
 				 int i = row % numResources;
@@ -531,15 +510,12 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 					 component.setBackground(new Color (colorLevel, colorLevel, colorLevel));
 				 }
 			 }
-			 // to make current day stand out
 			 if (number == 0 && currentDay == column - multiResourceShift) {
 				 component.setBackground(Color.lightGray);
-			 }
-				 
+			 }		 
 			 return component;
 		 }
 	}
-
 class PeriodicDayPanel extends JPanel 
 {
 	public PeriodicDayPanel () 
@@ -552,8 +528,7 @@ class PeriodicDayPanel extends JPanel
 		for(int i=1;i<=capacitylist.get(0).size();i++) {
 			daysList.add(i);
 		}
-		Object [] columns = daysList.toArray();		
-		
+		Object [] columns = daysList.toArray();			
 		ArrayList<Patient> multiPat = new ArrayList<Patient>();
 		for (Patient p : getAllPatient()) {
 			for (int i = 0; i < p.resources.size(); i++) {
@@ -563,56 +538,33 @@ class PeriodicDayPanel extends JPanel
 					multiPat.add(new PatientCopy(p, i+1));
 				}
 			}
-		}
-		
-		modelPat = multiPat.toArray();
-		
-		Object [] statePat=acceptedPatients.toArray();
+		}		
+		modelPat = multiPat.toArray();		
 		RectangularTableModel problemTM = new RectangularTableModel (modelPat, columns, new PDGenerator());
-		RectangularTableModel stateTM = new RectangularTableModel (statePat, columns, new PDGenerator());
 		ModelTable problemTable = new ModelTable(problemTM);
 		problemTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
 		problemTable.setDefaultRenderer(String.class, new PDCellRenderer());
-		problemTable.setDefaultRenderer(Object.class,new PDCellRenderer());
-	//	ModelTable stateTable = new ModelTable(stateTM);
-		//stateTable.setDefaultRenderer(Integer.class, new PDCellRenderer());
+		problemTable.setDefaultRenderer(Object.class,new PDCellRenderer());	
 		boolean  useSplitPane = false;
 		setLayout(new BorderLayout());
 		if (useSplitPane) {
-//		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-//				new JScrollPane(problemTable), new JScrollPane(stateTable));
-//		splitPane.setOneTouchExpandable(true);
-//		splitPane.setDividerLocation(150);
-	
-	//	this.add(splitPane,BorderLayout.CENTER);
-
 		}
 		else {
 			JTabbedPane tabbedPane = new JTabbedPane();
 			tabbedPane.addTab("Problem table", null, new JScrollPane(problemTable),
-	                  "Display initial problem table, where checkmarks show when patients need resources");
-	//		JScrollPane stateScrollPane = new JScrollPane(stateTable);
-			
-//			tabbedPane.addTab("State table", null, stateScrollPane,
-//	                  "Display selected state table, where rows show currently selected patients in the state" 
-//	                		  + "and checkmarks show when selected patients need resources"); 
+	                  "Display initial problem table, where checkmarks show when patients need resources");	
 			JPanel interimPanel = new JPanel();
 			interimPanel.add(problemTable);
-			this.add(new JScrollPane(problemTable),BorderLayout.CENTER); //  interimPanel 
-	//		tabbedPane.setSelectedComponent(stateScrollPane);
+			this.add(new JScrollPane(problemTable),BorderLayout.CENTER); 
 			try {
 				this.add(new JLabel(getHeuristic().getClass().getName()),BorderLayout.SOUTH);
 			} catch (HeuristicException e) {
-				// TODO Auto-generated catch block
+				
 				this.add(new JLabel("Heruistic not defined"),BorderLayout.SOUTH);
 			}
 		}
 	}	
 }
-//implement a static method getallPatients and in panel i call the method
-
-
-// give name in patient class make variable
 
 }
 
@@ -678,26 +630,12 @@ class Patient
 	int los;
 	String name;
 	static int count=0;
-//	int resource1;
-//	int resource2;
-	 ArrayList<Integer> resources ;
-	//List<int[]> resources;	
+	 ArrayList<Integer> resources ;	
 	public Patient () {
 		
-	}
-	 
+	}	 
 	 public boolean usesResource(int res) {
-		// TODO Auto-generated method stub
 		return resources.get(res) == 1;
-	}
-
-	public Patient(int a, int b) 
-	{
-		count ++;
-		this.name="P"+ count;
-		this.arrivalDay =a;
-		this.los=b;
-
 	}
 	public Patient(int a, int b,ArrayList<Integer> resources) 
 	{
@@ -706,19 +644,12 @@ class Patient
 		this.arrivalDay =a;
 		this.los=b;
 		this.resources=resources;
-		//this.resource2=d;
-
 	}
 	@Override
 	public String toString ()
 	{
-		
-		//return (  name +" <arr " + arrivalDay + ",los " + los +">"+"res1"+">"+resource1+"res2"+">"+resource2);
-		//for (int i = 0; i < resources.size(); i++) {
-			int resource1 = resources.get(0);
-//	        int resource2 =resources.get(1);
-			
-		//}
+		int resource1 = resources.get(0);
+
 		return (  name +" <arr " + arrivalDay + ",los " + los +","+"R:"+ resources + ">");
 	}
 	
@@ -726,16 +657,6 @@ class Patient
 	{
 		return day>=arrivalDay && day<arrivalDay+los;
 	}
-
-//	public boolean isRequiresResource1(Patient a)
-//	{
-//		return a.resource1==1 ;
-//	}
-//	public boolean isRequiresResource2(Patient a)
-//	{
-//		return a.resource2==1 ;
-//	}
-
 	public String toToolTipString() {
 		return name;
 	}
@@ -761,7 +682,6 @@ class PatientCopy extends Patient {
 	}
 	
 	 public boolean usesResource() {
-		// TODO Auto-generated method stub
 		return patient.resources.get(resource-1) == 1;
 	}
 }
