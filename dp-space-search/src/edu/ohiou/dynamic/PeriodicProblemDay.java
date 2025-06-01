@@ -253,7 +253,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 		
 		ZonedDateTime endTime = ZonedDateTime.now();
 //		System.out.println("DNS 2025 Result " + res);
-		System.out.println("DNS 2025 Duration from " + startTime + " to " + endTime);
+//		System.out.println("DNS 2025 Duration from " + startTime + " to " + endTime);
 //	((ComparableSpaceState) res).display();
 		
 	}
@@ -300,7 +300,8 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			{
 			List<Patient> nxtDyPatIter = nextDyPat;
 			List<List<Patient>> nextDayComb=new ArrayList <>();
-			int treshold =Math.max(nxtDyPatIter.size() - 5,0);
+//			int treshold =Math.max(nxtDyPatIter.size() - 5,0);
+			int treshold =nxtDyPatIter.size()/2 +1;
 			try {	
 				for (int i=treshold;i<=nxtDyPatIter.size();i++)
 				{
