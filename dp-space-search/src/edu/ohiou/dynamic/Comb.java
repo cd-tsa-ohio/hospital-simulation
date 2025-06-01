@@ -94,47 +94,18 @@ public class Comb
 	{
 
 		List<Patient>a = new ArrayList<>();
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
-		a.add(new Patient(1,3));
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		res.add(1);
+		int size = 10;
+		for (int i = 0; i<size; i++) {
+		a.add(new Patient(1,3,res));
+		}
+
 		Comb b= new Comb();
 		try {
 			
 			
-			List<List<Patient>> test=b.createCombinations(a, 2);
+			List<List<Patient>> test=b.createCombinations(a, size-2);
 			//System.out.println( b.createCombinations(a, 3));
 			//System.out.println(test);
 			System.out.println("combination: " +test.size());
