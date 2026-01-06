@@ -29,6 +29,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 
 	//int NextDayCap;
 	int currentDay;
+	static String fileName;
 	//static String XLSX_FOLDER;
 	//static int data[][]= {{1,3},{1,2},{2,2},{3,1}};
 	static List<int[]> data = new ArrayList<>();	  
@@ -238,7 +239,7 @@ public class PeriodicProblemDay extends ComparableSpaceState {
 			e.printStackTrace();
 		}
 		is.createPatients();
-		is.display();
+		is.display(is.toString() + " from file " + fileName);
 		ss.setApplet();
 
 		ss.display(ss.toString() + " Periodic Problem with the capacity " + (capacitylist));

@@ -37,7 +37,8 @@ public static void  getData ( ) throws IOException
 		CellRangeAddress capacitycellRange = CellRangeAddress.valueOf(capacity2Range.getRefersToFormula());
 		CellRangeAddress patientcellRange2 = CellRangeAddress.valueOf(patientdatarangename.getRefersToFormula());		
 		CellRangeAddress resourceCellRabgeName = CellRangeAddress.valueOf(resourcesRange.getRefersToFormula());
-		Sheet sheet= wb.getSheetAt(0);		
+		Sheet sheet= wb.getSheetAt(0);	
+		PeriodicProblemDay.fileName = excelFile.getName();
 		for (int i = capacitycellRange.getFirstRow(); i<=capacitycellRange.getLastRow();i++) {
 			
 			 Row row= sheet.getRow(i);
